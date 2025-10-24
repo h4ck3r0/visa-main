@@ -1,0 +1,351 @@
+[
+  {
+    "id": "aus_rule_001",
+    "title": "Visitor Visa (Subclass 600)",
+    "category": "tourist",
+    "requirements": [
+      "Valid passport (≥6 months)",
+      "Passport photos",
+      "ImmiAccount application",
+      "Visa fee receipt",
+      "Travel itinerary",
+      "Financial proof (bank statements, payslips, sponsor letter)",
+      "Employment/student/retirement proof",
+      "Cover letter",
+      "Evidence of ties to home country",
+      "Travel insurance",
+      "Health declaration"
+    ],
+    "text": "Allows short-term stays for tourism, visiting family/friends, or business. Requirements: Valid passport (≥6 months), passport photos, ImmiAccount application, visa fee receipt, travel itinerary, financial proof (bank statements, payslips, sponsor letter), employment/student/retirement proof, cover letter, evidence of ties to home country, travel insurance, health declaration.",
+    "country": "Australia",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "aus_rule_002",
+    "title": "Student Visa (Subclass 500)",
+    "category": "student",
+    "requirements": [
+      "Confirmation of Enrolment (CoE)",
+      "Valid passport",
+      "Birth certificate",
+      "Photos",
+      "Academic transcripts",
+      "English test scores (IELTS/TOEFL/PTE)",
+      "Proof of funds (~AUD 29,710)",
+      "Bank statements",
+      "Sponsor letters",
+      "Education loan docs",
+      "OSHC",
+      "Police clearance",
+      "Genuine Student statement"
+    ],
+    "text": "Allows full-time study at a registered Australian institution. Required: Confirmation of Enrolment (CoE), valid passport, birth certificate, photos, academic transcripts, English test scores (IELTS/TOEFL/PTE), proof of funds (~AUD 29,710), bank statements, sponsor letters, education loan docs, OSHC, police clearance, Genuine Student statement.",
+    "country": "Australia",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "aus_rule_003",
+    "title": "Family and Partner Visas",
+    "category": "family",
+    "requirements": [
+      "Passports",
+      "Birth certificates",
+      "Marriage/relationship certificates",
+      "Sponsor citizenship/PR proof",
+      "Financial docs",
+      "Health/character checks",
+      "Relationship evidence",
+      "Adoption/dependency proof"
+    ],
+    "text": "For family members, partners, or dependents of Australian citizens/PRs. Required: Passports, birth certificates, marriage/relationship certificates, sponsor citizenship/PR proof, financial docs, health/character checks, relationship evidence, adoption/dependency proof. Parent/Partner/Child subclasses have specific requirements.",
+    "country": "Australia",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "aus_rule_004",
+    "title": "Working and Skilled Visas",
+    "category": "work",
+    "requirements": [
+      "Valid passport",
+      "Photos",
+      "Birth certificates",
+      "ImmiAccount application",
+      "Skills assessment",
+      "English test",
+      "Employment reference letters",
+      "Payslips",
+      "Education certificates",
+      "Health/character certificates",
+      "Employer/state nomination"
+    ],
+    "text": "For skilled professionals. Subclasses: 189, 190, 482, 491. Key requirements: Valid passport, photos, birth certificates, ImmiAccount application, skills assessment, English test, employment reference letters, payslips, education certificates, health/character certificates, employer/state nomination.",
+    "country": "Australia",
+    "risk_factor": "high"
+  },
+  {
+    "id": "aus_rule_005",
+    "title": "Refugee and Humanitarian Visas",
+    "category": "humanitarian",
+    "requirements": [
+      "Valid passport",
+      "Photos",
+      "Birth certificates",
+      "Refugee status proof (UNHCR)",
+      "Identity docs",
+      "Travel history",
+      "Statements of persecution",
+      "Health/character assessments",
+      "Sponsorship/recommendation"
+    ],
+    "text": "For individuals facing persecution or humanitarian crises. Required: Valid passport, photos, birth certificates, refugee status proof (UNHCR), identity docs, travel history, statements of persecution, health/character assessments, sponsorship/recommendation.",
+    "country": "Australia",
+    "risk_factor": "high"
+  },
+  {
+    "id": "aus_rule_006",
+    "title": "Business / Investment Visas (Subclass 188 & 888)",
+    "category": "business",
+    "requirements": [
+      "Passport",
+      "Identity proof",
+      "Visa form/fee",
+      "EOI",
+      "Nomination",
+      "Business registration/licenses/tax returns",
+      "Audited financials",
+      "Assets/source of funds",
+      "Business plan/investment proposal",
+      "Complying investment evidence",
+      "Health/police clearances",
+      "English test",
+      "Certified color PDFs"
+    ],
+    "text": "For entrepreneurs, investors, business owners. Key docs: Passport, identity proof, visa form/fee, EOI, nomination, business registration/licenses/tax returns, audited financials, assets/source of funds, business plan/investment proposal, complying investment evidence, health/police clearances, English test, certified color PDFs. Stream-specific: Innovation, Investor, Significant Investor, Entrepreneur, Permanent (888).",
+    "country": "Australia",
+    "risk_factor": "high"
+  },
+  {
+    "id": "aus_rule_007",
+    "title": "Permanent Residency (PR) Visas",
+    "category": "pr",
+    "requirements": [
+      "Passport",
+      "Birth certificate",
+      "National ID",
+      "Skill assessment",
+      "Qualifications",
+      "Employment proofs",
+      "English test",
+      "Medical/police clearances",
+      "Nomination/sponsorship",
+      "Financial/asset proof",
+      "Certified translations"
+    ],
+    "text": "For skilled workers, nominated professionals, employer-sponsored applicants. Checklist: Passport, birth certificate, national ID, skill assessment, qualifications, employment proofs, English test, medical/police clearances, nomination/sponsorship, financial/asset proof, certified translations.",
+    "country": "Australia",
+    "risk_factor": "high"
+  },
+  {
+    "id": "can_rule_001",
+    "title": "General Documents Required for All Canada Visa Types",
+    "category": "general",
+    "requirements": [
+      "Valid passport (≥6 months)",
+      "Previous visas/travel history",
+      "Completed application form (e.g., IMM 5257)",
+      "Two recent passport photos (50mm x 70mm, white background)",
+      "Proof of financial support (bank statements, income, sponsor letter)",
+      "Travel itinerary",
+      "Accommodation details",
+      "Purpose of visit (travel plan/invitation/acceptance/job offer)",
+      "Proof of ties to India (employment, property, family)",
+      "Biometrics (BIL from VAC)"
+    ],
+    "text": "Valid passport (≥6 months), previous visas/travel history, completed application form (e.g., IMM 5257), two recent passport photos (50mm x 70mm, white background), proof of financial support (bank statements, income, sponsor letter), travel itinerary, accommodation details, purpose of visit (travel plan/invitation/acceptance/job offer), proof of ties to India (employment, property, family), biometrics (BIL from VAC).",
+    "country": "Canada",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "can_rule_002",
+    "title": "Visitor Visa (Tourist Visa)",
+    "category": "tourist",
+    "requirements": [
+      "Proof of funds",
+      "Strong ties to India",
+      "Intent to return",
+      "Invitation letter",
+      "Travel insurance"
+    ],
+    "text": "Tourism, family visits, short business trips, conferences. Up to 6 months per visit (multiple entries for up to 10 years or passport expiry). Key: Proof of funds, strong ties to India, intent to return, invitation letter, travel insurance.",
+    "country": "Canada",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "can_rule_003",
+    "title": "Study Permit (Student Visa)",
+    "category": "student",
+    "requirements": [
+      "Acceptance letter",
+      "Tuition payment proof",
+      "Statement of purpose",
+      "Proof of funds",
+      "Sponsor docs",
+      "Biometrics",
+      "Medical exam",
+      "Police clearance"
+    ],
+    "text": "Enrolment in Canadian DLI. Required: Acceptance letter, tuition payment proof, statement of purpose, proof of funds, sponsor docs, biometrics, medical exam, police clearance.",
+    "country": "Canada",
+    "risk_factor": "high"
+  },
+  {
+    "id": "can_rule_004",
+    "title": "Work Permit",
+    "category": "work",
+    "requirements": [
+      "Job offer letter",
+      "LMIA (if applicable)",
+      "Work experience docs",
+      "Biometrics",
+      "Medical exam",
+      "Police clearance"
+    ],
+    "text": "Employment in Canada based on job offer. Required: Job offer letter, LMIA (if applicable), work experience docs, biometrics, medical exam, police clearance.",
+    "country": "Canada",
+    "risk_factor": "high"
+  },
+  {
+    "id": "can_rule_005",
+    "title": "Permanent Residence",
+    "category": "pr",
+    "requirements": [
+      "Express Entry profile",
+      "Educational credentials",
+      "Language test results (IELTS/CELPIP/TEF)",
+      "Police clearance",
+      "Medical exam",
+      "Proof of funds",
+      "Sponsor docs"
+    ],
+    "text": "Express Entry, PR. Required: Express Entry profile, educational credentials, language test results (IELTS/CELPIP/TEF), police clearance, medical exam, proof of funds, sponsor docs.",
+    "country": "Canada",
+    "risk_factor": "high"
+  },
+  {
+    "id": "can_rule_006",
+    "title": "Transit Visa",
+    "category": "transit",
+    "requirements": [
+      "Valid passport",
+      "Confirmed onward travel"
+    ],
+    "text": "Passing through a Canadian airport. Up to 48 hours. Required: Valid passport, confirmed onward travel.",
+    "country": "Canada",
+    "risk_factor": "low"
+  },
+  {
+    "id": "can_rule_007",
+    "title": "Business Visa",
+    "category": "business",
+    "requirements": [
+      "Invitation letter from Canadian host",
+      "Business itinerary"
+    ],
+    "text": "Business activities (meetings, contracts). Short-term, usually within visitor visa parameters. Required: Invitation letter from Canadian host, business itinerary.",
+    "country": "Canada",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "usa_rule_001",
+    "title": "General Documents Required for U.S. Visa Application",
+    "category": "general",
+    "requirements": [
+      "Valid passport (≥6 months)",
+      "Older/expired passports",
+      "Recent passport-style photo(s)",
+      "DS-160 confirmation (or DS-260/other form)",
+      "Appointment confirmation letter",
+      "Bank statements",
+      "Proof of assets",
+      "Salary slips",
+      "Tax records",
+      "Employment letter/business registration/pay stub",
+      "Affidavit of support/sponsorship letter",
+      "Birth/marriage/divorce certificates",
+      "Educational transcripts/diplomas/certificates",
+      "Police clearance/criminal record",
+      "Medical exam/vaccination records (immigrant visas)",
+      "Travel itinerary/invitation/conference letters",
+      "Evidence of ties to home country",
+      "Certified translations"
+    ],
+    "text": "Valid passport (≥6 months), older/expired passports, recent passport-style photo(s), DS-160 confirmation (or DS-260/other form), appointment confirmation letter, bank statements, proof of assets, salary slips, tax records, employment letter/business registration/pay stub, affidavit of support/sponsorship letter, birth/marriage/divorce certificates, educational transcripts/diplomas/certificates, police clearance/criminal record, medical exam/vaccination records (immigrant visas), travel itinerary/invitation/conference letters, evidence of ties to home country, certified translations.",
+    "country": "USA",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "usa_rule_002",
+    "title": "Student Visa (F/M)",
+    "category": "student",
+    "requirements": [
+      "Valid passport (≥6 months)",
+      "DS-160 confirmation",
+      "I-20 or DS-2019 form",
+      "SEVIS fee receipt",
+      "Acceptance letter from U.S. institution",
+      "Proof of funds",
+      "Bank statements",
+      "Sponsor letters",
+      "Academic transcripts",
+      "English proficiency test scores (TOEFL/IELTS)",
+      "Passport-style photo(s)",
+      "Visa application fee receipt",
+      "Appointment confirmation letter"
+    ],
+    "text": "For full-time study in the U.S. Required: Valid passport, DS-160 confirmation, I-20 or DS-2019 form, SEVIS fee receipt, acceptance letter from U.S. institution, proof of funds, bank statements, sponsor letters, academic transcripts, English proficiency test scores (TOEFL/IELTS), passport-style photo(s), visa application fee receipt, appointment confirmation letter.",
+    "country": "USA",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "usa_rule_003",
+    "title": "Business Visa (B-1)",
+    "category": "business",
+    "requirements": [
+      "Valid passport (≥6 months)",
+      "DS-160 confirmation",
+      "Invitation letter from U.S. company",
+      "Business itinerary",
+      "Proof of funds",
+      "Bank statements",
+      "Employment letter",
+      "Tax records",
+      "Passport-style photo(s)",
+      "Visa application fee receipt",
+      "Appointment confirmation letter"
+    ],
+    "text": "For short-term business activities in the U.S. Required: Valid passport, DS-160 confirmation, invitation letter from U.S. company, business itinerary, proof of funds, bank statements, employment letter, tax records, passport-style photo(s), visa application fee receipt, appointment confirmation letter.",
+    "country": "USA",
+    "risk_factor": "medium"
+  },
+  {
+    "id": "usa_rule_004",
+    "title": "Work Visa (H, L, O, etc.)",
+    "category": "work",
+    "requirements": [
+      "Valid passport (≥6 months)",
+      "DS-160 confirmation",
+      "Approved petition (I-129, I-797)",
+      "Job offer letter",
+      "Proof of qualifications",
+      "Employment letter",
+      "Bank statements",
+      "Tax records",
+      "Passport-style photo(s)",
+      "Visa application fee receipt",
+      "Appointment confirmation letter"
+    ],
+    "text": "For employment in the U.S. Required: Valid passport, DS-160 confirmation, approved petition (I-129, I-797), job offer letter, proof of qualifications, employment letter, bank statements, tax records, passport-style photo(s), visa application fee receipt, appointment confirmation letter.",
+    "country": "USA",
+    "risk_factor": "medium"
+  }
+]
