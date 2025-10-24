@@ -5,6 +5,10 @@ import gradio as gr
 import google.generativeai as genai
 import sys
 import json
+from PIL import Image
+import PyPDF2
+from docx import Document
+import mimetypes
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from rag_utils import prepare_rag_store, retrieve
@@ -234,21 +238,91 @@ def process_application(selected_country, selected_category, *question_answers):
     
     return answer
 
-def chat_with_bot(message, history, selected_country, selected_category):
-    """Handle chatbot interactions with RAG context"""
-    if not message.strip():
-        return history, ""
+def extract_text_from_file(file_path):
+    """Extract text from PDF, DOCX, or image files"""
+    if not file_path:
+        return None, None
     
+    mime_type, _ = mimetypes.guess_type(file_path)
+    file_extension = os.path.splitext(file_path)[1].lower()
+    
+    try:
+        if file_extension == '.pdf' or (mime_type and 'pdf' in mime_type):
+            text_content = []
+            try:
+                with open(file_path, 'rb') as file:
+                    pdf_reader = PyPDF2.PdfReader(file)
+                    num_pages = len(pdf_reader.pages)
+                    print(f"PDF has {num_pages} pages")
+                    
+                    for page_num, page in enumerate(pdf_reader.pages):
+                        page_text = page.extract_text()
+                        if page_text and page_text.strip():
+                            text_content.append(f"--- Page {page_num + 1} ---\n{page_text}")
+                            print(f"Extracted {len(page_text)} chars from page {page_num + 1}")
+                    
+                    extracted_text = "\n\n".join(text_content)
+                    
+                    if not extracted_text.strip():
+                        print("PDF appears to be empty or scanned, treating as image")
+                        return "pdf_image", file_path
+                    
+                    print(f"Total extracted text length: {len(extracted_text)}")
+                    return "pdf", extracted_text
+                    
+            except Exception as pdf_error:
+                print(f"PDF extraction error: {pdf_error}")
+                return "pdf_image", file_path
+        
+        elif file_extension in ['.docx', '.doc'] or (mime_type and 'word' in mime_type):
+            try:
+                doc = Document(file_path)
+                text_content = []
+                
+                for para in doc.paragraphs:
+                    if para.text.strip():
+                        text_content.append(para.text)
+                
+                for table in doc.tables:
+                    for row in table.rows:
+                        row_text = " | ".join([cell.text.strip() for cell in row.cells])
+                        if row_text.strip():
+                            text_content.append(row_text)
+                
+                extracted_text = "\n\n".join(text_content)
+                print(f"DOCX extracted text length: {len(extracted_text)}")
+                
+                if not extracted_text.strip():
+                    return "docx", "Document appears to be empty"
+                
+                return "docx", extracted_text
+                
+            except Exception as docx_error:
+                print(f"DOCX extraction error: {docx_error}")
+                return "error", f"Could not read Word document: {docx_error}"
+        
+        elif file_extension in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'] or (mime_type and 'image' in mime_type):
+            return "image", file_path
+        
+        else:
+            return "unknown", None
+    
+    except Exception as e:
+        print(f"Error extracting file content: {e}")
+        return "error", str(e)
+
+def chat_with_bot(message, file, history, selected_country, selected_category):
+    """Handle chatbot interactions with RAG context and optional file upload"""
+    if not message.strip() and file is None:
+        return history, "", None
     
     context = ""
     if selected_country and selected_category:
-        
         filtered_docs = [
             rule for rule in rules 
             if rule.get("country", "").lower() == selected_country.lower() 
             and rule.get("category", "").lower() == selected_category.lower()
         ]
-        
         
         if not filtered_docs and index is not None and model is not None:
             try:
@@ -275,34 +349,94 @@ def chat_with_bot(message, history, selected_country, selected_category):
         
         if filtered_docs:
             context_parts = []
-            for doc in filtered_docs[:2]:  
+            for doc in filtered_docs[:2]:
                 context_parts.append(doc.get("text", ""))
             context = "\n\n".join(context_parts)
     
     if context and selected_country and selected_category:
-        prompt = (
+        base_prompt = (
             f"You are a helpful visa assistant. Use this context about {selected_country} {selected_category} visa:\n\n"
             f"{context}\n\n"
-            f"User question: {message}\n\n"
-            f"Provide a helpful, concise answer based on the context above."
         )
     else:
-        prompt = (
+        base_prompt = (
             f"You are a helpful visa assistant. "
-            f"User question: {message}\n\n"
-            f"Provide a helpful answer about visa applications. "
-            f"Note: For more specific answers, please select a country and category above."
+            f"Note: For more specific answers, please select a country and category above.\n\n"
         )
     
     try:
-        response = gemini_model.generate_content(prompt)
-        bot_message = response.text.strip() if hasattr(response, "text") else str(response)
+        if file is not None:
+            file_type, content = extract_text_from_file(file)
+            
+            if file_type == "error":
+                bot_message = f"Sorry, I couldn't read the file: {content}"
+            elif file_type == "unknown":
+                bot_message = "Sorry, this file type is not supported. Please upload PDF, DOCX, or image files."
+            elif file_type == "image":
+                pil_image = Image.open(content)
+                if message.strip():
+                    prompt = base_prompt + f"User question: {message}\n\nAnalyze the uploaded image and answer the question."
+                    response = gemini_model.generate_content([prompt, pil_image])
+                else:
+                    prompt = base_prompt + "Analyze this document/image in the context of visa applications. What information does it contain and is it valid/sufficient?"
+                    response = gemini_model.generate_content([prompt, pil_image])
+                bot_message = response.text.strip() if hasattr(response, "text") else str(response)
+            
+            elif file_type == "pdf_image":
+                
+                bot_message = (
+                    "This PDF appears to be a scanned document or image-based PDF. "
+                    "The text extraction didn't work. Please try:\n"
+                    "1. Converting it to a regular image (JPG/PNG) and uploading again\n"
+                    "2. Or describing what information you need help with from this document"
+                )
+            
+            elif file_type in ["pdf", "docx"]:
+                
+                if content and len(content.strip()) > 10:
+                    
+                    content_preview = content[:8000] if len(content) > 8000 else content
+                    
+                    if message.strip():
+                        prompt = (
+                            base_prompt +
+                            f"User question: {message}\n\n"
+                            f"Document content:\n{content_preview}\n\n"
+                            f"Analyze this document and answer the question in the context of visa applications."
+                        )
+                    else:
+                        prompt = (
+                            base_prompt +
+                            f"Document content:\n{content_preview}\n\n"
+                            f"Analyze this document for visa application purposes. Extract key information and assess:\n"
+                            f"1. What type of document is this?\n"
+                            f"2. What key information does it contain?\n"
+                            f"3. Is it relevant for visa applications?\n"
+                            f"4. What's missing or what should be verified?"
+                        )
+                    response = gemini_model.generate_content(prompt)
+                    bot_message = response.text.strip() if hasattr(response, "text") else str(response)
+                else:
+                    bot_message = "Sorry, I couldn't extract meaningful text from the document. It might be empty, corrupted, or image-based. Please try uploading it as an image format (JPG/PNG) instead."
+        
+        else:
+            # No file, just text message
+            prompt = base_prompt + f"User question: {message}\n\nProvide a helpful answer about visa applications."
+            response = gemini_model.generate_content(prompt)
+            bot_message = response.text.strip() if hasattr(response, "text") else str(response)
+    
     except Exception as e:
         bot_message = f"Sorry, I encountered an error: {e}"
     
-    history.append({"role": "user", "content": message})
+    
+    user_message = message if message else "Uploaded a document"
+    if file:
+        file_name = os.path.basename(file)
+        user_message += f" 📎 {file_name}"
+    
+    history.append({"role": "user", "content": user_message})
     history.append({"role": "assistant", "content": bot_message})
-    return history, ""
+    return history, "", None
 
 with gr.Blocks(
     theme=gr.themes.Soft(primary_hue="blue", secondary_hue="slate"),
@@ -316,6 +450,42 @@ with gr.Blocks(
         height: 600px;
         overflow-y: auto;
     }
+    #gemini-response-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    #gemini-response-box h3 {
+        color: white;
+        margin-top: 0;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+    #gemini-response-content {
+        background: rgba(255,255,255,0.95);
+        color: #333;
+        padding: 20px;
+        border-radius: 8px;
+        line-height: 1.6;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+    .upload-section-title {
+        margin-top: 20px;
+        margin-bottom: 5px;
+        font-size: 1.1em;
+        color: #333;
+    }
+    .upload-hint {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 0.9em;
+        color: #666;
+        font-style: italic;
+    }
     """
 ) as demo:
     gr.Markdown(
@@ -324,14 +494,14 @@ with gr.Blocks(
             <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" width="48"/>
             <div>
                 <h1 style="margin-bottom:0;">Visa Approval Probability Assistant</h1>
-                <span style="font-size:1.1em;color:#555;">Gemini + RAG with Chatbot</span>
+                <span style="font-size:1.1em;color:#555;">Gemini + RAG with Chatbot & Image Analysis</span>
             </div>
         </div>
         """
     )
     
     with gr.Row():
-        
+       
         with gr.Column(scale=3):
             gr.Markdown("## 🌍 Select Your Destination")
             country_dropdown = gr.Dropdown(
@@ -362,9 +532,15 @@ with gr.Blocks(
                 
                 submit_btn = gr.Button("Submit Application", visible=False, variant="primary", size="lg")
             
-            result_box = gr.Markdown(visible=False)
+           
+            result_container = gr.Column(visible=False)
+            with result_container:
+                with gr.Group(elem_id="gemini-response-box"):
+                    gr.Markdown("### Analysis")
+                    result_box = gr.Markdown(elem_id="gemini-response-content")
             
             gr.Markdown("## 💬 Ask Questions", elem_id="chatbot-section")
+            gr.Markdown("*Upload documents: **Images** (JPG, PNG), **PDFs**, or **Word documents** (.docx) for analysis*")
             chatbot = gr.Chatbot(
                 label="Visa Assistant",
                 height=350,
@@ -372,14 +548,21 @@ with gr.Blocks(
                 type="messages"
             )
             with gr.Row():
-                chat_input = gr.Textbox(
-                    placeholder="Ask me anything about visa requirements...",
-                    show_label=False,
-                    scale=4,
-                    container=False
-                )
-                chat_btn = gr.Button("Send", scale=1, variant="primary")
-        
+                with gr.Column(scale=4):
+                    chat_input = gr.Textbox(
+                        placeholder="Ask me anything about visa requirements...",
+                        show_label=False,
+                        container=False
+                    )
+                with gr.Column(scale=1):
+                    file_input = gr.File(
+                        label="Upload Document",
+                        file_types=["image", ".pdf", ".docx", ".doc"],
+                        type="filepath"
+                    )
+            with gr.Row():
+                chat_btn = gr.Button("Send", variant="primary", scale=1)
+                clear_btn = gr.Button("Clear Chat", scale=1)
         
         with gr.Column(scale=2):
             rag_context_display = gr.Markdown(
@@ -421,8 +604,11 @@ with gr.Blocks(
     def submit_application(selected_country, selected_category, *question_answers):
         """Handle application submission"""
         result = process_application(selected_country, selected_category, *question_answers)
-        return gr.Markdown(value=result, visible=True)
+        return gr.Column(visible=True), result
     
+    def clear_chat():
+        """Clear chat history"""
+        return [], "", None
     
     country_dropdown.change(
         update_categories,
@@ -445,20 +631,24 @@ with gr.Blocks(
     submit_btn.click(
         submit_application,
         inputs=[country_dropdown, category_dropdown] + question_components,
-        outputs=[result_box]
+        outputs=[result_container, result_box]
     )
-    
     
     chat_btn.click(
         chat_with_bot,
-        inputs=[chat_input, chatbot, country_dropdown, category_dropdown],
-        outputs=[chatbot, chat_input]
+        inputs=[chat_input, file_input, chatbot, country_dropdown, category_dropdown],
+        outputs=[chatbot, chat_input, file_input]
     )
     
     chat_input.submit(
         chat_with_bot,
-        inputs=[chat_input, chatbot, country_dropdown, category_dropdown],
-        outputs=[chatbot, chat_input]
+        inputs=[chat_input, file_input, chatbot, country_dropdown, category_dropdown],
+        outputs=[chatbot, chat_input, file_input]
+    )
+    
+    clear_btn.click(
+        clear_chat,
+        outputs=[chatbot, chat_input, file_input]
     )
 
 if __name__ == "__main__":
