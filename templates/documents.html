@@ -1,0 +1,1709 @@
+{% extends "base.html" %}
+
+{% block title %}Documents - Visa Assistant Pro{% endblock %}
+{% block page_title %}Document Center{% endblock %}
+
+{% block content %}
+<div class="documents-container">
+    <!-- Document Upload Section -->
+    <section class="upload-section" data-animation="fadeInUp">
+        <div class="upload-card card">
+            <div class="upload-header">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-info">
+                    <h2>Smart Document Analysis</h2>
+                    <p>Upload your visa documents for AI-powered analysis and verification</p>
+                </div>
+            </div>
+            
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="documentInput" multiple accept=".pdf,.docx,.doc,.png,.jpg,.jpeg,.gif,.bmp,.webp" style="display: none;">
+                <div class="upload-zone" onclick="document.getElementById('documentInput').click()">
+                    <div class="upload-illustration">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3>Drop files here or click to browse</h3>
+                    <p>Supports: PDF, DOCX, Images (JPG, PNG, etc.)</p>
+                    <div class="upload-limits">
+                        <span><i class="fas fa-info-circle"></i> Max file size: 10MB per file</span>
+                    </div>
+                </div>
+                
+                <div class="upload-queue" id="uploadQueue" style="display: none;">
+                    <!-- Files will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Document Categories -->
+    <section class="categories-section" data-animation="fadeInUp">
+        <div class="section-header">
+            <h2>Document Categories</h2>
+            <p>Organize your documents by type for better management</p>
+        </div>
+        
+        <div class="categories-grid">
+            <div class="category-card card" data-category="passport">
+                <div class="category-icon">
+                    <i class="fas fa-passport"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Passport & ID</h3>
+                    <p>Passport pages, national ID, driver's license</p>
+                    <div class="category-count">0 documents</div>
+                </div>
+                <div class="category-actions">
+                    <button class="btn btn-primary" onclick="selectCategory('passport')">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </div>
+            
+            <div class="category-card card" data-category="financial">
+                <div class="category-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Financial Documents</h3>
+                    <p>Bank statements, salary slips, tax returns</p>
+                    <div class="category-count">0 documents</div>
+                </div>
+                <div class="category-actions">
+                    <button class="btn btn-primary" onclick="selectCategory('financial')">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </div>
+            
+            <div class="category-card card" data-category="travel">
+                <div class="category-icon">
+                    <i class="fas fa-plane"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Travel Documents</h3>
+                    <p>Tickets, itinerary, hotel bookings</p>
+                    <div class="category-count">0 documents</div>
+                </div>
+                <div class="category-actions">
+                    <button class="btn btn-primary" onclick="selectCategory('travel')">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </div>
+            
+            <div class="category-card card" data-category="employment">
+                <div class="category-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Employment</h3>
+                    <p>Employment letter, contracts, certificates</p>
+                    <div class="category-count">0 documents</div>
+                </div>
+                <div class="category-actions">
+                    <button class="btn btn-primary" onclick="selectCategory('employment')">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </div>
+            
+            <div class="category-card card" data-category="education">
+                <div class="category-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Education</h3>
+                    <p>Diplomas, transcripts, language certificates</p>
+                    <div class="category-count">0 documents</div>
+                </div>
+                <div class="category-actions">
+                    <button class="btn btn-primary" onclick="selectCategory('education')">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </div>
+            
+            <div class="category-card card" data-category="other">
+                <div class="category-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Other Documents</h3>
+                    <p>Insurance, invitations, medical records</p>
+                    <div class="category-count">0 documents</div>
+                </div>
+                <div class="category-actions">
+                    <button class="btn btn-primary" onclick="selectCategory('other')">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Document Library -->
+    <section class="library-section" data-animation="fadeInUp">
+        <div class="section-header">
+            <h2>Document Library</h2>
+            <div class="library-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search documents..." id="documentSearch" onkeyup="filterDocuments()">
+                </div>
+                <div class="view-controls">
+                    <button class="view-btn active" data-view="grid" onclick="setView('grid')">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" data-view="list" onclick="setView('list')">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+                <select class="form-select" id="categoryFilter" onchange="filterDocuments()">
+                    <option value="">All Categories</option>
+                    <option value="passport">Passport & ID</option>
+                    <option value="financial">Financial</option>
+                    <option value="travel">Travel</option>
+                    <option value="employment">Employment</option>
+                    <option value="education">Education</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="documents-grid" id="documentsGrid">
+            <!-- Documents will be populated dynamically -->
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <h3>No documents uploaded yet</h3>
+                <p>Upload your first document to get started with AI analysis</p>
+                <button class="btn btn-primary" onclick="document.getElementById('documentInput').click()">
+                    <i class="fas fa-upload"></i> Upload Document
+                </button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Document Preview Modal -->
+<div class="document-modal" id="documentModal" style="display: none;">
+    <div class="modal-backdrop" onclick="closeDocumentModal()"></div>
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitle">Document Preview</div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="downloadDocument()">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button class="btn btn-error" onclick="deleteDocument()">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button class="close-btn" onclick="closeDocumentModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="modal-content" id="modalContent">
+            <!-- Preview content and analysis will be loaded here -->
+            <div class="document-analysis" id="documentAnalysis">
+                <!-- AI analysis will be shown here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Documents-specific styles */
+.documents-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.upload-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.upload-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: var(--spacing-2xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: float 15s ease-in-out infinite;
+}
+
+.upload-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.upload-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.upload-info h2 {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.upload-info p {
+    margin: 0;
+    font-size: 1.125rem;
+    opacity: 0.9;
+}
+
+.upload-area {
+    position: relative;
+}
+
+.upload-zone {
+    border: 3px dashed rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-2xl);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+.upload-illustration {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.8;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.upload-zone h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.upload-zone p {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-bottom: var(--spacing-md);
+}
+
+.upload-limits {
+    font-size: 0.875rem;
+    opacity: 0.7;
+}
+
+.upload-queue {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+}
+
+.categories-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-header p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.category-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.category-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.category-info {
+    flex: 1;
+}
+
+.category-info h3 {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.category-info p {
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.category-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.category-actions {
+    flex-shrink: 0;
+}
+
+.library-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.library-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    max-width: 300px;
+}
+
+.search-box i {
+    position: absolute;
+    left: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.search-box input {
+    width: 100%;
+    padding-left: 2.5rem;
+}
+
+.view-controls {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.view-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-btn:hover,
+.view-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    min-height: 300px;
+}
+
+.documents-grid.list-view {
+    grid-template-columns: 1fr;
+}
+
+.document-item {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.document-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.document-item:hover::before {
+    opacity: 1;
+}
+
+.document-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.document-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.document-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.document-icon.pdf {
+    background: var(--error-color);
+    color: white;
+}
+
+.document-icon.docx {
+    background: var(--info-color);
+    color: white;
+}
+
+.document-icon.image {
+    background: var(--success-color);
+    color: white;
+}
+
+.document-icon.other {
+    background: var(--warning-color);
+    color: white;
+}
+
+.document-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.document-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.document-category {
+    background: var(--bg-tertiary);
+    padding: 2px var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.document-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: var(--bg-glass);
+    border-radius: var(--radius-sm);
+}
+
+.status-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+.status-icon.verified {
+    background: var(--success-color);
+    color: white;
+}
+
+.status-icon.analyzing {
+    background: var(--warning-color);
+    color: white;
+}
+
+.status-icon.error {
+    background: var(--error-color);
+    color: white;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-secondary);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.empty-state p {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Document Modal */
+.document-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-overlay);
+    backdrop-filter: blur(10px);
+}
+
+.modal-container {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    max-width: 90%;
+    max-height: 90%;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-glass);
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modal-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--error-color);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.close-btn:hover {
+    transform: scale(1.1);
+}
+
+.modal-content {
+    flex: 1;
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    min-height: 300px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-lg);
+    background: var(--bg-glass);
+}
+
+.document-analysis {
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-color);
+    width: 100%;
+    max-height: none;
+}
+
+.analysis-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.analysis-content {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Gemini AI Message Styling */
+.ai-message-box {
+    padding: 16px;
+    border-radius: 10px;
+    background: var(--bg-secondary);
+    border-left: 4px solid var(--primary-color);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    transition: all var(--transition-normal);
+    margin-bottom: 15px;
+}
+
+.ai-message-box:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.ai-message-box strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.ai-message-box em {
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+.ai-message-box ol,
+.ai-message-box ul {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.ai-message-box li {
+    margin: 6px 0;
+}
+
+.ai-message-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ai-message-header i {
+    font-size: 1.1rem;
+}
+
+.final-assessment {
+    border-left-color: var(--success-color);
+}
+
+.final-assessment .ai-message-header {
+    color: var(--success-color);
+}
+
+.final-assessment .ai-message-header i {
+    color: var(--success-color);
+}
+
+.forgery-detection {
+    border-left-color: var(--error-color);
+}
+
+.forgery-detection .ai-message-header {
+    color: var(--error-color);
+}
+
+.forgery-detection .ai-message-header i {
+    color: var(--error-color);
+}
+
+.ai-message-content {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.7;
+}
+
+.ai-message-content p {
+    margin: 8px 0;
+}
+
+.ai-message-content strong {
+    color: var(--primary-color);
+}
+
+.analysis-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 15px 0;
+    padding: 15px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+}
+
+.analysis-metrics > div {
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    background: var(--bg-tertiary);
+}
+
+.file-queue-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.file-progress {
+    flex: 1;
+}
+
+.file-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-top: var(--spacing-xs);
+}
+
+.file-progress-fill {
+    height: 100%;
+    background: var(--success-color);
+    border-radius: var(--radius-sm);
+    transition: width var(--transition-normal);
+}
+
+.file-cancel {
+    background: var(--error-color);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .library-controls {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+    
+    .search-box {
+        order: -1;
+        max-width: none;
+        width: 100%;
+    }
+    
+    .view-controls,
+    .form-select {
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    /* General */
+    .documents-container {
+        padding: 0 var(--spacing-md);
+    }
+
+    /* Upload Section */
+    .upload-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .upload-info h2 {
+        font-size: 1.5rem;
+    }
+
+    .upload-card {
+        padding: var(--spacing-xl);
+    }
+
+    /* Categories */
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-card {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+
+    /* Document Grid */
+    .documents-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    /* Modal */
+    .modal-container {
+        width: 95%;
+        height: 95%;
+    }
+    
+    .modal-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .modal-title {
+        font-size: 1.1rem;
+    }
+    
+    .modal-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    /* Analysis */
+    .analysis-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-message-box {
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile - Extra small screens */
+@media (max-width: 480px) {
+    /* General */
+    .documents-container {
+        padding: 0 var(--spacing-sm);
+    }
+
+    /* Upload Section */
+    .upload-card {
+        padding: var(--spacing-lg);
+    }
+
+    .upload-info h2 {
+        font-size: 1.25rem;
+    }
+
+    .upload-illustration {
+        font-size: 3rem;
+    }
+
+    /* Section Headers */
+    .section-header h2 {
+        font-size: 1.75rem;
+    }
+
+    /* Category Cards */
+    .category-icon {
+        width: 45px;
+        height: 45px;
+    }
+
+    .category-info h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Document Items */
+    .document-item {
+        padding: var(--spacing-md);
+    }
+
+    .document-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .document-name {
+        font-size: 0.95rem;
+    }
+
+    /* Modal - Full screen on small mobile */
+    .modal-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 0;
+    }
+
+    .modal-header {
+        padding: var(--spacing-md);
+    }
+
+    .modal-title {
+        font-size: 1rem;
+    }
+
+    .modal-content {
+        padding: var(--spacing-md);
+    }
+
+    /* Analysis */
+    .analysis-metrics {
+        gap: 8px;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+    .ai-message-box {
+        padding: 10px;
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+        border-radius: 8px;
+    }
+
+    .ai-message-header {
+        font-size: 0.75rem;
+        gap: 4px;
+        margin-bottom: 8px;
+    }
+
+    .ai-message-header i {
+        font-size: 0.9rem;
+    }
+
+    .ai-message-content {
+        font-size: 0.75rem;
+        line-height: 1.6;
+    }
+
+    /* Buttons */
+    .btn {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+
+    .close-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    /* Library Controls */
+    .library-controls {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .view-btn {
+        flex: 1;
+    }
+
+    /* Empty State */
+    .empty-icon {
+        font-size: 3rem;
+    }
+}
+</style>
+
+<script>
+let documentsState = {
+    documents: [],
+    currentCategory: '',
+    currentView: 'grid',
+    selectedDocument: null,
+    uploadQueue: []
+};
+
+// Initialize documents
+document.addEventListener('DOMContentLoaded', function() {
+    setupFileUpload();
+    loadDocuments();
+});
+
+function setupFileUpload() {
+    const uploadArea = document.getElementById('uploadArea');
+    const documentInput = document.getElementById('documentInput');
+    const uploadZone = uploadArea.querySelector('.upload-zone');
+    
+    // File input change
+    documentInput.addEventListener('change', handleFileSelection);
+    
+    // Drag and drop
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('drag-over');
+    });
+    
+    uploadZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('drag-over');
+    });
+    
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('drag-over');
+        
+        const files = Array.from(e.dataTransfer.files);
+        processFiles(files);
+    });
+}
+
+function handleFileSelection(event) {
+    const files = Array.from(event.target.files);
+    processFiles(files);
+}
+
+function selectCategory(category) {
+    documentsState.currentCategory = category;
+    document.getElementById('documentInput').click();
+}
+
+function processFiles(files) {
+    const validFiles = files.filter(file => {
+        // Check file type
+        const allowedTypes = [
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/msword'
+        ];
+        const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+        
+        if (!allowedTypes.includes(file.type) && !allowedImageTypes.includes(file.type)) {
+            showToast(`${file.name}: Unsupported file type`, 'error');
+            return false;
+        }
+        
+        // Check file size (10MB max)
+        if (file.size > 10 * 1024 * 1024) {
+            showToast(`${file.name}: File too large (max 10MB)`, 'error');
+            return false;
+        }
+        
+        return true;
+    });
+    
+    if (validFiles.length > 0) {
+        showUploadQueue(validFiles);
+        validFiles.forEach(file => uploadFile(file));
+    }
+}
+
+function showUploadQueue(files) {
+    const uploadQueue = document.getElementById('uploadQueue');
+    const uploadZone = uploadQueue.parentNode.querySelector('.upload-zone');
+    
+    uploadQueue.style.display = 'block';
+    uploadZone.style.display = 'none';
+    
+    files.forEach(file => {
+        const fileId = generateId();
+        const queueItem = document.createElement('div');
+        queueItem.className = 'file-queue-item';
+        queueItem.id = `file-${fileId}`;
+        
+        const fileIcon = getFileIcon(file);
+        
+        queueItem.innerHTML = `
+            <div class="file-icon ${fileIcon.class}">
+                <i class="${fileIcon.icon}"></i>
+            </div>
+            <div class="file-progress">
+                <div class="file-name">${file.name}</div>
+                <div class="file-size">${formatFileSize(file.size)}</div>
+                <div class="file-progress-bar">
+                    <div class="file-progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+            <button class="file-cancel" onclick="cancelUpload('${fileId}')">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        uploadQueue.appendChild(queueItem);
+        
+        documentsState.uploadQueue.push({
+            id: fileId,
+            file: file,
+            element: queueItem
+        });
+    });
+}
+
+async function uploadFile(file) {
+    const fileId = documentsState.uploadQueue.find(item => item.file === file)?.id;
+    if (!fileId) return;
+    
+    const progressFill = document.querySelector(`#file-${fileId} .file-progress-fill`);
+    const statusText = document.querySelector(`#file-${fileId} .file-status`);
+    
+    try {
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('message', '');
+        formData.append('country', documentsState.currentCountry || '');
+        formData.append('category', documentsState.currentCategory || '');
+        
+        // Simulate initial upload progress
+        if (progressFill) progressFill.style.width = '30%';
+        if (statusText) statusText.textContent = 'Uploading...';
+        
+        // Send file to backend
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (progressFill) progressFill.style.width = '60%';
+        if (statusText) statusText.textContent = 'Processing...';
+        
+        const result = await response.json();
+        
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Upload failed');
+        }
+        
+        // Complete progress
+        if (progressFill) progressFill.style.width = '100%';
+        if (statusText) statusText.textContent = 'Verified';
+        
+        // Create document object with backend results
+        const documentObj = {
+            id: generateId(),
+            name: file.name,
+            type: getFileType(file),
+            category: documentsState.currentCategory || 'other',
+            size: file.size,
+            uploadDate: new Date().toISOString(),
+            status: 'verified',
+            analysis: result.ai_final_assessment || result.analysis_report || 'Analysis complete',
+            authenticity_score: result.authenticity_score || 0,
+            risk_level: result.risk_level || 'UNKNOWN',
+            ai_forgery_detection: result.ai_forgery_detection || '',
+            detailed_results: result.detailed_results || {}
+        };
+        
+        documentsState.documents.push(documentObj);
+        updateCategoryCount(documentObj.category);
+        
+        // Remove from queue
+        removeFromQueue(fileId);
+        
+        showToast(`${file.name} verified successfully`, 'success');
+        
+        // Refresh display
+        loadDocuments();
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        if (statusText) statusText.textContent = 'Failed';
+        showToast(`Failed to upload ${file.name}: ${error.message}`, 'error');
+        removeFromQueue(fileId);
+    }
+    
+    // Hide queue if empty
+    if (documentsState.uploadQueue.length === 0) {
+        setTimeout(() => {
+            document.getElementById('uploadQueue').style.display = 'none';
+            document.querySelector('.upload-zone').style.display = 'block';
+        }, 1000);
+    }
+}
+
+function cancelUpload(fileId) {
+    removeFromQueue(fileId);
+    
+    if (documentsState.uploadQueue.length === 0) {
+        document.getElementById('uploadQueue').style.display = 'none';
+        document.querySelector('.upload-zone').style.display = 'block';
+    }
+}
+
+function removeFromQueue(fileId) {
+    const queueIndex = documentsState.uploadQueue.findIndex(item => item.id === fileId);
+    if (queueIndex > -1) {
+        const item = documentsState.uploadQueue[queueIndex];
+        if (item.element && item.element.parentNode) {
+            item.element.parentNode.removeChild(item.element);
+        }
+        documentsState.uploadQueue.splice(queueIndex, 1);
+    }
+}
+
+async function analyzeDocument(file) {
+    // This function is deprecated - use backend API instead
+    return 'See detailed analysis below';
+}
+
+function getFileIcon(file) {
+    if (file.type === 'application/pdf') {
+        return { icon: 'fas fa-file-pdf', class: 'pdf' };
+    } else if (file.type.includes('word')) {
+        return { icon: 'fas fa-file-word', class: 'docx' };
+    } else if (file.type.startsWith('image/')) {
+        return { icon: 'fas fa-file-image', class: 'image' };
+    } else {
+        return { icon: 'fas fa-file', class: 'other' };
+    }
+}
+
+function getFileType(file) {
+    if (file.type === 'application/pdf') {
+        return 'pdf';
+    } else if (file.type.includes('word')) {
+        return 'docx';
+    } else if (file.type.startsWith('image/')) {
+        return 'image';
+    } else {
+        return 'other';
+    }
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+function loadDocuments() {
+    const grid = document.getElementById('documentsGrid');
+    
+    if (documentsState.documents.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <h3>No documents uploaded yet</h3>
+                <p>Upload your first document to get started with AI analysis</p>
+                <button class="btn btn-primary" onclick="document.getElementById('documentInput').click()">
+                    <i class="fas fa-upload"></i> Upload Document
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
+    let filteredDocs = [...documentsState.documents];
+    
+    // Apply filters
+    const searchTerm = document.getElementById('documentSearch')?.value.toLowerCase() || '';
+    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+    
+    if (searchTerm) {
+        filteredDocs = filteredDocs.filter(doc => 
+            doc.name.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    if (categoryFilter) {
+        filteredDocs = filteredDocs.filter(doc => doc.category === categoryFilter);
+    }
+    
+    grid.innerHTML = '';
+    
+    filteredDocs.forEach(doc => {
+        const docElement = createDocumentElement(doc);
+        grid.appendChild(docElement);
+    });
+    
+    if (filteredDocs.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>No documents match your search</h3>
+                <p>Try adjusting your search terms or filters</p>
+            </div>
+        `;
+    }
+}
+
+function createDocumentElement(doc) {
+    const element = document.createElement('div');
+    element.className = 'document-item';
+    element.onclick = () => openDocumentModal(doc);
+    
+    const fileIcon = getFileIconByType(doc.type);
+    const statusIcon = getStatusIcon(doc.status);
+    
+    element.innerHTML = `
+        <div class="document-header">
+            <div class="document-icon ${fileIcon.class}">
+                <i class="${fileIcon.icon}"></i>
+            </div>
+            <div class="document-info">
+                <div class="document-name">${doc.name}</div>
+                <div class="document-meta">
+                    <span>${formatFileSize(doc.size)}</span>
+                    <span>${formatDate(doc.uploadDate)}</span>
+                </div>
+            </div>
+        </div>
+        <div class="document-category">${getCategoryName(doc.category)}</div>
+        <div class="document-status">
+            <div class="status-icon ${doc.status}">
+                <i class="${statusIcon}"></i>
+            </div>
+            <span>${getStatusText(doc.status)}</span>
+        </div>
+    `;
+    
+    return element;
+}
+
+function getFileIconByType(type) {
+    const icons = {
+        pdf: { icon: 'fas fa-file-pdf', class: 'pdf' },
+        docx: { icon: 'fas fa-file-word', class: 'docx' },
+        image: { icon: 'fas fa-file-image', class: 'image' },
+        other: { icon: 'fas fa-file', class: 'other' }
+    };
+    return icons[type] || icons.other;
+}
+
+function getStatusIcon(status) {
+    const icons = {
+        verified: 'fas fa-check',
+        analyzing: 'fas fa-spinner fa-spin',
+        error: 'fas fa-exclamation-triangle'
+    };
+    return icons[status] || 'fas fa-clock';
+}
+
+function getStatusText(status) {
+    const texts = {
+        verified: 'Verified',
+        analyzing: 'Analyzing...',
+        error: 'Error'
+    };
+    return texts[status] || 'Pending';
+}
+
+function getCategoryName(category) {
+    const names = {
+        passport: 'Passport & ID',
+        financial: 'Financial',
+        travel: 'Travel',
+        employment: 'Employment',
+        education: 'Education',
+        other: 'Other'
+    };
+    return names[category] || 'Other';
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
+    });
+}
+
+function updateCategoryCount(category) {
+    const count = documentsState.documents.filter(doc => doc.category === category).length;
+    const categoryCard = document.querySelector(`[data-category="${category}"] .category-count`);
+    if (categoryCard) {
+        categoryCard.textContent = `${count} document${count !== 1 ? 's' : ''}`;
+    }
+}
+
+function setView(view) {
+    documentsState.currentView = view;
+    
+    // Update buttons
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-view="${view}"]`).classList.add('active');
+    
+    // Update grid
+    const grid = document.getElementById('documentsGrid');
+    if (view === 'list') {
+        grid.classList.add('list-view');
+    } else {
+        grid.classList.remove('list-view');
+    }
+}
+
+function filterDocuments() {
+    loadDocuments();
+}
+
+function openDocumentModal(doc) {
+    documentsState.selectedDocument = doc;
+    
+    const modal = document.getElementById('documentModal');
+    const title = document.getElementById('modalTitle');
+    const content = document.getElementById('modalContent');
+    const analysis = document.getElementById('documentAnalysis');
+    
+    title.textContent = doc.name;
+    
+    // Create preview HTML
+    let previewHTML = '';
+    if (doc.type === 'image') {
+        previewHTML = `
+            <div style="width: 100%; text-align: center;">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" 
+                     alt="Document Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
+            </div>
+        `;
+    } else {
+        previewHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary); width: 100%;">
+                <i class="fas fa-file-alt" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <h3>Preview not available</h3>
+                <p>This file type cannot be previewed in the browser</p>
+            </div>
+        `;
+    }
+    
+    // Show comprehensive analysis with enhanced styling
+    let analysisHTML = `
+        <div class="analysis-header">
+            <i class="fas fa-brain"></i>
+            AI Analysis Results
+        </div>
+    `;
+    
+    // Show authenticity score if available
+    if (doc.authenticity_score !== undefined) {
+        const scoreColor = doc.authenticity_score >= 80 ? '#10b981' : doc.authenticity_score >= 60 ? '#f59e0b' : '#ef4444';
+        const riskColor = doc.risk_level === 'LOW' ? '#10b981' : doc.risk_level === 'MEDIUM' ? '#f59e0b' : doc.risk_level === 'HIGH' ? '#ef4444' : '#dc2626';
+        
+        analysisHTML += `
+            <div class="analysis-metrics">
+                <div style="text-align: center;">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">Authenticity Score</div>
+                    <div style="font-size: 1.8rem; font-weight: bold; color: ${scoreColor};">${doc.authenticity_score}/100</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">Risk Level</div>
+                    <div style="font-size: 1.2rem; font-weight: bold; color: ${riskColor};">${doc.risk_level || 'UNKNOWN'}</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Show final assessment from Gemini
+    if (doc.analysis) {
+        const finalAssessmentText = doc.analysis.replace(/\n/g, '<br>');
+        analysisHTML += `
+            <div class="ai-message-box final-assessment">
+                <div class="ai-message-header">
+                    <i class="fas fa-check-circle"></i> Final Authenticity Assessment
+                </div>
+                <div class="ai-message-content">
+                    ${finalAssessmentText}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Show forgery detection analysis
+    if (doc.ai_forgery_detection) {
+        const forgeryText = doc.ai_forgery_detection.replace(/\n/g, '<br>');
+        analysisHTML += `
+            <div class="ai-message-box forgery-detection">
+                <div class="ai-message-header">
+                    <i class="fas fa-shield-virus"></i> Forgery Detection Analysis
+                </div>
+                <div class="ai-message-content">
+                    ${forgeryText}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Set both preview and analysis in modal-content
+    content.innerHTML = previewHTML + '<div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); margin: var(--spacing-lg) 0; padding-top: var(--spacing-lg);"></div>' + analysisHTML;
+    
+    modal.style.display = 'flex';
+    
+    // Animate in
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modal.querySelector('.modal-container').style.transform = 'scale(1)';
+    }, 10);
+}
+
+function closeDocumentModal() {
+    const modal = document.getElementById('documentModal');
+    modal.style.opacity = '0';
+    modal.querySelector('.modal-container').style.transform = 'scale(0.9)';
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+}
+
+function downloadDocument() {
+    if (documentsState.selectedDocument) {
+        showToast('Download started', 'success');
+    }
+}
+
+function deleteDocument() {
+    if (!documentsState.selectedDocument) return;
+    
+    if (confirm('Are you sure you want to delete this document?')) {
+        const docIndex = documentsState.documents.findIndex(
+            doc => doc.id === documentsState.selectedDocument.id
+        );
+        
+        if (docIndex > -1) {
+            const doc = documentsState.documents[docIndex];
+            documentsState.documents.splice(docIndex, 1);
+            updateCategoryCount(doc.category);
+            loadDocuments();
+            closeDocumentModal();
+            showToast('Document deleted successfully', 'success');
+        }
+    }
+}
+</script>
+
+{% endblock %}

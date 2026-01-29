@@ -3,8 +3,27 @@ import json
 import pickle
 import numpy as np
 from tqdm import tqdm
-from sentence_transformers import SentenceTransformer
-import faiss
+
+# Lazy load heavy dependencies
+_model = None
+_faiss = None
+
+def get_model():
+    """Lazy load sentence transformers model"""
+    global _model
+    if _model is None:
+        from sentence_transformers import SentenceTransformer
+        print("Loading embedding model (this may take a moment)...")
+        _model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    return _model
+
+def get_faiss():
+    """Lazy load faiss"""
+    global _faiss
+    if _faiss is None:
+        import faiss
+        _faiss = faiss
+    return _faiss
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RULES_PATH = os.path.join(BASE_DIR, "data", "visa_rules.json")
@@ -35,6 +54,7 @@ def load_cache():
         return pickle.load(f)
 
 def build_faiss_index(embeddings):
+    faiss = get_faiss()
     dim = embeddings.shape[1]
     index = faiss.IndexFlatL2(dim)
     index.add(embeddings)
@@ -42,12 +62,13 @@ def build_faiss_index(embeddings):
     return index
 
 def load_faiss_index():
+    faiss = get_faiss()
     if not os.path.exists(FAISS_CACHE):
         return None
     return faiss.read_index(FAISS_CACHE)
 
 def prepare_rag_store(force_rebuild=False):
-    model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+    model = get_model()
     rules = load_rules()
     cache = load_cache() if not force_rebuild else None
     if cache and not force_rebuild:
@@ -66,7 +87,8 @@ def retrieve(query, rules, index, model, top_k=3):
     if not rules or index is None:
         return []
     query_emb = model.encode([query])
-    D, I = index.search(np.array(query_emb).astype(np.float32), top_k)
+    query_emb_np = np.array(query_emb).astype(np.float32)
+    D, I = index.search(query_emb_np, top_k)
     results = []
     for idx in I[0]:
         if 0 <= idx < len(rules):

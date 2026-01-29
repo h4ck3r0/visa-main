@@ -1,0 +1,1243 @@
+{% extends "base.html" %}
+
+{% block title %}AI Assistant - Visa Assistant Pro{% endblock %}
+{% block page_title %}AI Assistant{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <!-- Chat Header -->
+    <div class="chat-header card" data-animation="fadeInDown">
+        <div class="header-content">
+            <div class="ai-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="ai-info">
+                <h2>Visa AI Assistant</h2>
+                <p class="ai-status">
+                    <span class="status-dot"></span>
+                    Online & Ready to Help
+                </p>
+            </div>
+        </div>
+        <div class="chat-controls">
+            <div class="context-selector">
+                <select id="contextCountry" class="form-select" onchange="updateChatContext()">
+                    <option value="">All Countries</option>
+                </select>
+                <select id="contextCategory" class="form-select" onchange="updateChatContext()">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="clearChat()">
+                <i class="fas fa-trash"></i>
+                Clear Chat
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-layout">
+        <!-- Chat Messages -->
+        <div class="chat-main">
+            <div class="chat-messages" id="chatMessages" data-animation="fadeInUp">
+                <!-- Welcome Message -->
+                <div class="message ai-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                👋 Hello! I'm your AI Visa Assistant. I'm here to help you with:
+                                <ul>
+                                    <li>📋 Visa requirements and documentation</li>
+                                    <li>🌍 Country-specific immigration rules</li>
+                                    <li>📄 Document verification and analysis</li>
+                                    <li>💡 Application tips and guidance</li>
+                                    <li>❓ Any visa-related questions you have</li>
+                                </ul>
+                                How can I assist you today?
+                            </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="typing-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-section" data-animation="fadeInUp">
+                <div class="input-container">
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.png,.jpg,.jpeg,.gif,.bmp,.webp" style="display: none;" onchange="handleFileSelect(event)">
+                        <div class="upload-prompt" id="uploadPrompt">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Drop files here or click to upload</span>
+                        </div>
+                        <div class="file-preview" id="filePreview" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="message-input-container">
+                        <div class="input-wrapper">
+                            <textarea 
+                                id="messageInput" 
+                                class="message-input" 
+                                placeholder="Ask me anything about visas, immigration, or upload a document for analysis..."
+                                rows="1"
+                                onkeydown="handleKeyDown(event)"
+                                oninput="adjustTextareaHeight()"
+                            ></textarea>
+                            <div class="input-actions">
+                                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                                <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Sidebar -->
+        <div class="chat-sidebar">
+            <!-- Quick Actions -->
+            <div class="sidebar-section card" data-animation="fadeInRight">
+                <div class="section-header">
+                    <h3><i class="fas fa-zap"></i> Quick Actions</h3>
+                </div>
+                <div class="quick-actions">
+                    <button class="quick-action-btn" onclick="sendQuickMessage('What documents do I need for a tourist visa?')">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Document Requirements</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="sendQuickMessage('How long does visa processing usually take?')">
+                        <i class="fas fa-clock"></i>
+                        <span>Processing Times</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="sendQuickMessage('What are common visa rejection reasons?')">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Rejection Reasons</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="sendQuickMessage('How can I improve my visa approval chances?')">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>Approval Tips</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="sendQuickMessage('What is the visa application fee?')">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Application Fees</span>
+                    </button>
+                    <button class="quick-action-btn" onclick="sendQuickMessage('Can I apply for visa online?')">
+                        <i class="fas fa-globe"></i>
+                        <span>Online Applications</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conversation History -->
+            <div class="sidebar-section card" data-animation="fadeInRight">
+                <div class="section-header">
+                    <h3><i class="fas fa-history"></i> Recent Conversations</h3>
+                </div>
+                <div class="conversation-history" id="conversationHistory">
+                    <!-- Will be populated dynamically -->
+                    <div class="history-item">
+                        <div class="history-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="history-content">
+                            <div class="history-title">Tourist Visa Requirements</div>
+                            <div class="history-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <div class="history-content">
+                            <div class="history-title">Document Analysis</div>
+                            <div class="history-time">1 day ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Tips -->
+            <div class="sidebar-section card" data-animation="fadeInRight">
+                <div class="section-header">
+                    <h3><i class="fas fa-lightbulb"></i> Chat Tips</h3>
+                </div>
+                <div class="help-tips">
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <div class="tip-text">
+                            <strong>Upload Documents</strong><br>
+                            Upload passport scans, bank statements, or other visa documents for AI analysis
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="tip-text">
+                            <strong>Set Context</strong><br>
+                            Select your destination country above for more specific and accurate advice
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="tip-text">
+                            <strong>Ask Specific Questions</strong><br>
+                            Be specific about your situation for the most helpful responses
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Chat-specific styles */
+.chat-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+    height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.ai-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.ai-info h2 {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 1.5rem;
+}
+
+.ai-status {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    opacity: 0.9;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success-color);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.chat-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.context-selector {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.context-selector select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    min-width: 120px;
+}
+
+.context-selector select option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.chat-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--spacing-lg);
+    flex: 1;
+    min-height: 0;
+}
+
+.chat-main {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-lg);
+    max-height: calc(100vh - 300px);
+}
+
+.message {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+}
+
+.ai-message .message-avatar {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+}
+
+.user-message .message-avatar {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    order: 2;
+}
+
+.user-message {
+    flex-direction: row-reverse;
+}
+
+.message-content {
+    flex: 1;
+    max-width: 70%;
+}
+
+.user-message .message-content {
+    max-width: 70%;
+}
+
+.message-bubble {
+    background: var(--bg-glass);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    position: relative;
+}
+
+.ai-message .message-bubble {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.user-message .message-bubble {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.message-text {
+    color: var(--text-primary);
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.message-text ul {
+    margin: var(--spacing-sm) 0;
+    padding-left: var(--spacing-lg);
+}
+
+.message-text li {
+    margin-bottom: var(--spacing-xs);
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: var(--spacing-xs);
+    text-align: right;
+}
+
+.user-message .message-time {
+    text-align: left;
+}
+
+.typing-indicator {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.7;
+}
+
+.typing-dots {
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    animation: typingDot 1.5s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingDot {
+    0%, 60%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    30% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.chat-input-section {
+    padding: var(--spacing-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-glass);
+}
+
+.input-container {
+    max-width: 100%;
+}
+
+.file-upload-area {
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.file-upload-area.drag-over {
+    border-color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.upload-prompt {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.upload-prompt i {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--primary-color);
+}
+
+.file-preview {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.file-size {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.remove-file {
+    background: var(--error-color);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    color: white;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-input-container {
+    position: relative;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    background: var(--bg-tertiary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+    transition: border-color var(--transition-fast);
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--primary-color);
+}
+
+.message-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    padding: var(--spacing-sm);
+    resize: none;
+    max-height: 120px;
+    min-height: 40px;
+}
+
+.message-input:focus {
+    outline: none;
+}
+
+.message-input::placeholder {
+    color: var(--text-muted);
+}
+
+.input-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+}
+
+.upload-btn,
+.send-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.upload-btn {
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+}
+
+.upload-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.05);
+}
+
+.send-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.send-btn:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+.send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.chat-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.sidebar-section {
+    padding: 0;
+    overflow: hidden;
+}
+
+.section-header {
+    padding: var(--spacing-lg);
+    background: var(--bg-glass);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.quick-actions {
+    padding: var(--spacing-lg);
+    display: grid;
+    gap: var(--spacing-sm);
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--bg-glass);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: left;
+    width: 100%;
+}
+
+.quick-action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateX(5px);
+}
+
+.quick-action-btn i {
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.conversation-history {
+    padding: var(--spacing-lg);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-bottom: var(--spacing-sm);
+}
+
+.history-item:hover {
+    background: var(--bg-glass);
+}
+
+.history-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.history-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.history-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.help-tips {
+    padding: var(--spacing-lg);
+}
+
+.tip-item {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-md);
+}
+
+.tip-item:last-child {
+    margin-bottom: 0;
+}
+
+.tip-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+.tip-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* File types */
+.file-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.file-icon.pdf {
+    background: var(--error-color);
+    color: white;
+}
+
+.file-icon.docx {
+    background: var(--info-color);
+    color: white;
+}
+
+.file-icon.image {
+    background: var(--success-color);
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .chat-layout {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .chat-sidebar {
+        order: -1;
+    }
+    
+    .sidebar-section {
+        display: none;
+    }
+    
+    .sidebar-section:first-child {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .chat-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .chat-controls {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .context-selector {
+        flex: 1;
+    }
+    
+    .context-selector select {
+        flex: 1;
+        min-width: auto;
+    }
+    
+    .message-content {
+        max-width: 85%;
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .message-content {
+        max-width: 90%;
+    }
+    
+    .input-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+    
+    .input-actions {
+        justify-content: flex-end;
+    }
+}
+</style>
+
+<script>
+let chatState = {
+    messages: [],
+    country: '',
+    category: '',
+    countries: [],
+    categories: [],
+    currentFile: null
+};
+
+// Initialize chat
+document.addEventListener('DOMContentLoaded', function() {
+    loadCountries();
+    setupFileUpload();
+    setupMessageInput();
+    
+    // Focus on input
+    document.getElementById('messageInput').focus();
+});
+
+async function loadCountries() {
+    try {
+        const response = await fetch('/api/countries');
+        const countries = await response.json();
+        chatState.countries = countries;
+        
+        const select = document.getElementById('contextCountry');
+        countries.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country;
+            option.textContent = country;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading countries:', error);
+    }
+}
+
+async function updateChatContext() {
+    const countrySelect = document.getElementById('contextCountry');
+    const categorySelect = document.getElementById('contextCategory');
+    
+    chatState.country = countrySelect.value;
+    chatState.category = categorySelect.value;
+    
+    // Load categories when country changes
+    if (chatState.country && !chatState.category) {
+        try {
+            const response = await fetch(`/api/categories/${chatState.country}`);
+            const categories = await response.json();
+            chatState.categories = categories;
+            
+            categorySelect.innerHTML = '<option value="">All Categories</option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading categories:', error);
+        }
+    }
+    
+    // Add context message
+    if (chatState.country || chatState.category) {
+        const contextMsg = `Context updated: ${chatState.country || 'All Countries'}${chatState.category ? ` - ${chatState.category}` : ''}`;
+        addMessage('system', contextMsg);
+    }
+}
+
+function setupFileUpload() {
+    const uploadArea = document.getElementById('fileUploadArea');
+    const fileInput = document.getElementById('fileInput');
+    
+    // Click to upload
+    uploadArea.addEventListener('click', (e) => {
+        if (e.target === uploadArea || e.target.closest('.upload-prompt')) {
+            fileInput.click();
+        }
+    });
+    
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('drag-over');
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelect({ target: { files } });
+        }
+    });
+}
+
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Check file type
+    const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+    
+    if (!allowedTypes.includes(file.type) && !allowedImageTypes.includes(file.type)) {
+        showToast('Please select a PDF, DOCX, or image file', 'error');
+        return;
+    }
+    
+    // Check file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+        showToast('File size must be less than 10MB', 'error');
+        return;
+    }
+    
+    chatState.currentFile = file;
+    showFilePreview(file);
+}
+
+function showFilePreview(file) {
+    const preview = document.getElementById('filePreview');
+    const prompt = document.getElementById('uploadPrompt');
+    
+    let fileIcon = 'fas fa-file';
+    let iconClass = '';
+    
+    if (file.type === 'application/pdf') {
+        fileIcon = 'fas fa-file-pdf';
+        iconClass = 'pdf';
+    } else if (file.type.includes('word')) {
+        fileIcon = 'fas fa-file-word';
+        iconClass = 'docx';
+    } else if (file.type.startsWith('image/')) {
+        fileIcon = 'fas fa-file-image';
+        iconClass = 'image';
+    }
+    
+    preview.innerHTML = `
+        <div class="file-icon ${iconClass}">
+            <i class="${fileIcon}"></i>
+        </div>
+        <div class="file-info">
+            <div class="file-name">${file.name}</div>
+            <div class="file-size">${formatFileSize(file.size)}</div>
+        </div>
+        <button class="remove-file" onclick="removeFile()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    prompt.style.display = 'none';
+    preview.style.display = 'flex';
+    
+    // Enable send button
+    updateSendButton();
+}
+
+function removeFile() {
+    chatState.currentFile = null;
+    document.getElementById('filePreview').style.display = 'none';
+    document.getElementById('uploadPrompt').style.display = 'flex';
+    document.getElementById('fileInput').value = '';
+    
+    updateSendButton();
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function setupMessageInput() {
+    const input = document.getElementById('messageInput');
+    
+    input.addEventListener('input', () => {
+        updateSendButton();
+        adjustTextareaHeight();
+    });
+}
+
+function adjustTextareaHeight() {
+    const textarea = document.getElementById('messageInput');
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+}
+
+function updateSendButton() {
+    const input = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    
+    const hasText = input.value.trim().length > 0;
+    const hasFile = chatState.currentFile !== null;
+    
+    sendBtn.disabled = !hasText && !hasFile;
+}
+
+function handleKeyDown(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+}
+
+async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    
+    if (!message && !chatState.currentFile) return;
+    
+    // Add user message
+    if (message) {
+        addMessage('user', message);
+    }
+    
+    // Add file message if present
+    if (chatState.currentFile) {
+        addMessage('user', `📎 Uploaded: ${chatState.currentFile.name}`, true);
+    }
+    
+    // Clear input
+    input.value = '';
+    adjustTextareaHeight();
+    
+    // Show typing indicator
+    showTypingIndicator();
+    
+    try {
+        let response;
+        
+        if (chatState.currentFile) {
+            // Send file
+            const formData = new FormData();
+            formData.append('file', chatState.currentFile);
+            formData.append('message', message);
+            formData.append('country', chatState.country);
+            formData.append('category', chatState.category);
+            
+            response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+        } else {
+            // Send text message
+            response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: message,
+                    country: chatState.country,
+                    category: chatState.category
+                })
+            });
+        }
+        
+        const data = await response.json();
+        
+        setTimeout(() => {
+            hideTypingIndicator();
+            
+            if (data.success) {
+                addMessage('ai', data.message);
+            } else {
+                addMessage('ai', `Sorry, I encountered an error: ${data.error}`);
+            }
+        }, 1000);
+        
+    } catch (error) {
+        setTimeout(() => {
+            hideTypingIndicator();
+            addMessage('ai', 'Sorry, I\'m having trouble connecting. Please try again.');
+        }, 1000);
+    }
+    
+    // Clear file
+    if (chatState.currentFile) {
+        removeFile();
+    }
+    
+    updateSendButton();
+}
+
+function sendQuickMessage(message) {
+    document.getElementById('messageInput').value = message;
+    updateSendButton();
+    sendMessage();
+}
+
+function addMessage(type, content, isFile = false) {
+    const messagesContainer = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    messageDiv.className = `message ${type}-message`;
+    
+    let avatarIcon = type === 'ai' ? 'fas fa-robot' : 
+                    type === 'system' ? 'fas fa-cog' : 'fas fa-user';
+    
+    if (isFile) {
+        avatarIcon = 'fas fa-paperclip';
+    }
+    
+    messageDiv.innerHTML = `
+        <div class="message-avatar">
+            <i class="${avatarIcon}"></i>
+        </div>
+        <div class="message-content">
+            <div class="message-bubble">
+                <div class="message-text">${formatMessage(content)}</div>
+                <div class="message-time">${timestamp}</div>
+            </div>
+        </div>
+    `;
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    // Store message
+    chatState.messages.push({
+        type,
+        content,
+        timestamp: new Date().toISOString(),
+        isFile
+    });
+}
+
+function formatMessage(content) {
+    // Convert line breaks to HTML
+    content = content.replace(/\n/g, '<br>');
+    
+    // Convert URLs to links
+    content = content.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+    
+    // Convert markdown-style formatting
+    content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    return content;
+}
+
+function showTypingIndicator() {
+    document.getElementById('typingIndicator').style.display = 'flex';
+    const messagesContainer = document.getElementById('chatMessages');
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    document.getElementById('typingIndicator').style.display = 'none';
+}
+
+function clearChat() {
+    if (confirm('Are you sure you want to clear the chat history?')) {
+        const messagesContainer = document.getElementById('chatMessages');
+        
+        // Keep only the welcome message
+        const welcomeMessage = messagesContainer.querySelector('.message');
+        messagesContainer.innerHTML = '';
+        messagesContainer.appendChild(welcomeMessage);
+        
+        chatState.messages = [];
+        
+        showToast('Chat cleared successfully', 'success');
+    }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,1575 @@
+{% extends "base.html" %}
+
+{% block title %}Help & Support - Visa Assistant Pro{% endblock %}
+{% block page_title %}Help & Support{% endblock %}
+
+{% block content %}
+<div class="help-container">
+    <!-- Hero Section -->
+    <section class="help-hero" data-animation="fadeInUp">
+        <div class="hero-content">
+            <div class="hero-illustration">
+                <i class="fas fa-question-circle"></i>
+            </div>
+            <h1>How can we help you today?</h1>
+            <p>Get instant answers to your visa questions with our AI-powered support system</p>
+            
+            <div class="help-search">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for help articles, visa types, or requirements..." 
+                           id="helpSearch" onkeyup="searchHelp(event)">
+                    <button class="search-btn" onclick="performSearch()">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="search-suggestions" id="searchSuggestions" style="display: none;">
+                    <!-- Suggestions will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions-section" data-animation="fadeInUp">
+        <div class="section-header">
+            <h2>Quick Actions</h2>
+            <p>Get help with common visa tasks</p>
+        </div>
+        
+        <div class="quick-actions-grid">
+            <div class="action-card card" onclick="navigateToPage('application')">
+                <div class="action-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Start Application</h3>
+                    <p>Begin your visa application with our guided process</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </div>
+            
+            <div class="action-card card" onclick="navigateToPage('chat')">
+                <div class="action-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Ask AI Assistant</h3>
+                    <p>Get instant answers to your visa questions</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </div>
+            
+            <div class="action-card card" onclick="navigateToPage('documents')">
+                <div class="action-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Upload Documents</h3>
+                    <p>Analyze and verify your visa documents</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </div>
+            
+            <div class="action-card card" onclick="scrollToSection('contact')">
+                <div class="action-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Contact Support</h3>
+                    <p>Speak with our visa experts</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Help Categories -->
+    <section class="categories-section" data-animation="fadeInUp">
+        <div class="section-header">
+            <h2>Browse Help Topics</h2>
+            <p>Find detailed guides and information</p>
+        </div>
+        
+        <div class="categories-grid">
+            <div class="category-item" data-category="getting-started">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <h3>Getting Started</h3>
+                    <span class="article-count">12 articles</span>
+                </div>
+                <div class="category-articles">
+                    <a href="#" class="article-link" onclick="showArticle('how-to-begin')">
+                        <i class="fas fa-file-text"></i>
+                        How to begin your visa application
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('document-requirements')">
+                        <i class="fas fa-file-text"></i>
+                        Understanding document requirements
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('choosing-visa-type')">
+                        <i class="fas fa-file-text"></i>
+                        Choosing the right visa type
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('application-timeline')">
+                        <i class="fas fa-file-text"></i>
+                        Application timeline and processing
+                    </a>
+                </div>
+            </div>
+            
+            <div class="category-item" data-category="visa-types">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-passport"></i>
+                    </div>
+                    <h3>Visa Types</h3>
+                    <span class="article-count">18 articles</span>
+                </div>
+                <div class="category-articles">
+                    <a href="#" class="article-link" onclick="showArticle('tourist-visa')">
+                        <i class="fas fa-file-text"></i>
+                        Tourist visa requirements
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('business-visa')">
+                        <i class="fas fa-file-text"></i>
+                        Business visa guidelines
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('student-visa')">
+                        <i class="fas fa-file-text"></i>
+                        Student visa process
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('work-visa')">
+                        <i class="fas fa-file-text"></i>
+                        Work visa information
+                    </a>
+                </div>
+            </div>
+            
+            <div class="category-item" data-category="documents">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h3>Documents</h3>
+                    <span class="article-count">15 articles</span>
+                </div>
+                <div class="category-articles">
+                    <a href="#" class="article-link" onclick="showArticle('passport-requirements')">
+                        <i class="fas fa-file-text"></i>
+                        Passport requirements and validity
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('financial-documents')">
+                        <i class="fas fa-file-text"></i>
+                        Financial documentation guide
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('photo-specifications')">
+                        <i class="fas fa-file-text"></i>
+                        Photo specifications
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('document-translation')">
+                        <i class="fas fa-file-text"></i>
+                        Document translation requirements
+                    </a>
+                </div>
+            </div>
+            
+            <div class="category-item" data-category="application-process">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Application Process</h3>
+                    <span class="article-count">22 articles</span>
+                </div>
+                <div class="category-articles">
+                    <a href="#" class="article-link" onclick="showArticle('online-application')">
+                        <i class="fas fa-file-text"></i>
+                        Completing online applications
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('appointment-booking')">
+                        <i class="fas fa-file-text"></i>
+                        Booking embassy appointments
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('interview-preparation')">
+                        <i class="fas fa-file-text"></i>
+                        Preparing for visa interviews
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('application-tracking')">
+                        <i class="fas fa-file-text"></i>
+                        Tracking application status
+                    </a>
+                </div>
+            </div>
+            
+            <div class="category-item" data-category="troubleshooting">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                    <h3>Troubleshooting</h3>
+                    <span class="article-count">8 articles</span>
+                </div>
+                <div class="category-articles">
+                    <a href="#" class="article-link" onclick="showArticle('application-rejected')">
+                        <i class="fas fa-file-text"></i>
+                        What to do if application is rejected
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('missing-documents')">
+                        <i class="fas fa-file-text"></i>
+                        Handling missing documents
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('processing-delays')">
+                        <i class="fas fa-file-text"></i>
+                        Understanding processing delays
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('technical-issues')">
+                        <i class="fas fa-file-text"></i>
+                        Resolving technical issues
+                    </a>
+                </div>
+            </div>
+            
+            <div class="category-item" data-category="country-specific">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Country-Specific</h3>
+                    <span class="article-count">25 articles</span>
+                </div>
+                <div class="category-articles">
+                    <a href="#" class="article-link" onclick="showArticle('usa-visa-guide')">
+                        <i class="fas fa-file-text"></i>
+                        USA visa application guide
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('uk-visa-guide')">
+                        <i class="fas fa-file-text"></i>
+                        UK visa requirements
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('canada-visa-guide')">
+                        <i class="fas fa-file-text"></i>
+                        Canada visa process
+                    </a>
+                    <a href="#" class="article-link" onclick="showArticle('schengen-visa-guide')">
+                        <i class="fas fa-file-text"></i>
+                        Schengen visa information
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" data-animation="fadeInUp">
+        <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Quick answers to common questions</p>
+        </div>
+        
+        <div class="faq-container">
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <h3>How long does visa processing usually take?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Visa processing times vary by country and visa type. Tourist visas typically take 5-15 business days, while work or study visas may take 2-8 weeks. Our AI assistant can provide specific timelines for your destination and visa category.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <h3>What documents do I need for a visa application?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Required documents typically include a valid passport, completed application form, passport photos, proof of financial means, travel itinerary, and supporting documents specific to your visa type. Use our application wizard for a personalized document checklist.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <h3>Can I apply for multiple visas at the same time?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Generally, you can only hold one valid visa per country at a time. However, you may apply for visas to different countries simultaneously. Some countries may have restrictions on concurrent applications, so check specific embassy requirements.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <h3>What if my visa application is rejected?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>If your visa is rejected, you'll receive a rejection letter explaining the reasons. You can typically reapply after addressing the issues mentioned. Some countries allow appeals within specific timeframes. Our experts can help you understand rejection reasons and improve your next application.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <h3>Do I need travel insurance for my visa?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Many countries require travel insurance as part of the visa application. Schengen countries, for example, require insurance with minimum €30,000 coverage. Check your destination's requirements and ensure your policy meets their specific criteria.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <h3>Can I extend my visa after arrival?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Visa extension policies vary by country and visa type. Some countries allow extensions for valid reasons (medical emergencies, flight cancellations), while others don't permit any extensions. Check extension policies before traveling and apply well before your current visa expires.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Tutorials -->
+    <section class="tutorials-section" data-animation="fadeInUp">
+        <div class="section-header">
+            <h2>Video Tutorials</h2>
+            <p>Step-by-step visual guides</p>
+        </div>
+        
+        <div class="tutorials-grid">
+            <div class="tutorial-card card" onclick="playTutorial('getting-started')">
+                <div class="tutorial-thumbnail">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="tutorial-duration">5:32</div>
+                </div>
+                <div class="tutorial-content">
+                    <h3>Getting Started with Visa Applications</h3>
+                    <p>Learn the basics of visa applications and how to use our platform effectively.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 12,543 views</span>
+                        <span><i class="fas fa-thumbs-up"></i> 98%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tutorial-card card" onclick="playTutorial('document-upload')">
+                <div class="tutorial-thumbnail">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="tutorial-duration">3:45</div>
+                </div>
+                <div class="tutorial-content">
+                    <h3>Document Upload and Analysis</h3>
+                    <p>How to properly upload and organize your visa documents for AI analysis.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 8,932 views</span>
+                        <span><i class="fas fa-thumbs-up"></i> 95%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tutorial-card card" onclick="playTutorial('ai-assistant')">
+                <div class="tutorial-thumbnail">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="tutorial-duration">4:18</div>
+                </div>
+                <div class="tutorial-content">
+                    <h3>Using the AI Assistant</h3>
+                    <p>Maximize the power of our AI assistant to get instant visa guidance.</p>
+                    <div class="tutorial-meta">
+                        <span><i class="fas fa-eye"></i> 15,267 views</span>
+                        <span><i class="fas fa-thumbs-up"></i> 97%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Support -->
+    <section class="contact-section" id="contact" data-animation="fadeInUp">
+        <div class="section-header">
+            <h2>Still Need Help?</h2>
+            <p>Our expert team is here to assist you</p>
+        </div>
+        
+        <div class="contact-grid">
+            <div class="contact-card card">
+                <div class="contact-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="contact-content">
+                    <h3>Live Chat</h3>
+                    <p>Get instant help from our AI assistant or connect with human agents</p>
+                    <button class="btn btn-primary" onclick="navigateToPage('chat')">
+                        <i class="fas fa-comment"></i> Start Chat
+                    </button>
+                </div>
+            </div>
+            
+            <div class="contact-card card">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="contact-content">
+                    <h3>Email Support</h3>
+                    <p>Send us detailed questions and get comprehensive responses</p>
+                    <button class="btn btn-secondary" onclick="openEmailSupport()">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </button>
+                </div>
+            </div>
+            
+            <div class="contact-card card">
+                <div class="contact-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="contact-content">
+                    <h3>Phone Support</h3>
+                    <p>Speak directly with our visa experts for personalized guidance</p>
+                    <button class="btn btn-secondary" onclick="showPhoneNumbers()">
+                        <i class="fas fa-phone"></i> View Numbers
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="support-hours">
+            <div class="hours-info">
+                <h4><i class="fas fa-clock"></i> Support Hours</h4>
+                <div class="hours-grid">
+                    <div class="hours-item">
+                        <span class="day">Monday - Friday</span>
+                        <span class="time">9:00 AM - 8:00 PM EST</span>
+                    </div>
+                    <div class="hours-item">
+                        <span class="day">Saturday</span>
+                        <span class="time">10:00 AM - 6:00 PM EST</span>
+                    </div>
+                    <div class="hours-item">
+                        <span class="day">Sunday</span>
+                        <span class="time">AI Assistant Only</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Article Modal -->
+<div class="article-modal" id="articleModal" style="display: none;">
+    <div class="modal-backdrop" onclick="closeArticleModal()"></div>
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-title" id="articleTitle">Article Title</div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="printArticle()">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button class="close-btn" onclick="closeArticleModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="modal-content" id="articleContent">
+            <!-- Article content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<style>
+/* Help-specific styles */
+.help-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.help-hero {
+    text-align: center;
+    padding: var(--spacing-2xl) 0;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--secondary-rgb), 0.1));
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.hero-illustration {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-lg);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.help-search {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    padding: var(--spacing-sm);
+    transition: all var(--transition-normal);
+}
+
+.search-wrapper:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+.search-wrapper i {
+    margin-left: var(--spacing-md);
+    color: var(--text-muted);
+}
+
+.search-wrapper input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: var(--spacing-md);
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.search-wrapper input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-btn {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.search-btn:hover {
+    transform: scale(1.1);
+    background: var(--primary-dark);
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    margin-top: var(--spacing-sm);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+}
+
+.suggestion-item {
+    padding: var(--spacing-md);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color var(--transition-fast);
+}
+
+.suggestion-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.quick-actions-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-header p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.action-card:hover::before {
+    left: 100%;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.action-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-content h3 {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.action-content p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.action-arrow {
+    color: var(--text-muted);
+    font-size: 1.25rem;
+    transition: all var(--transition-fast);
+}
+
+.action-card:hover .action-arrow {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.categories-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.category-item {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    transition: all var(--transition-normal);
+}
+
+.category-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.category-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.category-header h3 {
+    flex: 1;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.article-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    padding: 2px var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+.category-articles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.article-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    font-size: 0.875rem;
+}
+
+.article-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.article-link i {
+    color: var(--text-muted);
+    width: 16px;
+    flex-shrink: 0;
+}
+
+.faq-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.faq-item:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.faq-question:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.faq-question h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.faq-question i {
+    color: var(--text-muted);
+    transition: transform var(--transition-fast);
+}
+
+.faq-item.active .faq-question i {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-normal);
+}
+
+.faq-item.active .faq-answer {
+    max-height: 200px;
+}
+
+.faq-answer p {
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.tutorials-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.tutorials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.tutorial-card {
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    overflow: hidden;
+}
+
+.tutorial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.tutorial-thumbnail {
+    position: relative;
+    height: 200px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.play-button {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--primary-color);
+    transition: all var(--transition-fast);
+}
+
+.tutorial-card:hover .play-button {
+    transform: scale(1.1);
+    background: white;
+}
+
+.tutorial-duration {
+    position: absolute;
+    bottom: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.tutorial-content {
+    padding: var(--spacing-lg);
+}
+
+.tutorial-content h3 {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.tutorial-content p {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.tutorial-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.tutorial-meta span {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.contact-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.contact-card {
+    text-align: center;
+    padding: var(--spacing-xl);
+    transition: all var(--transition-normal);
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.contact-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    margin: 0 auto var(--spacing-lg);
+}
+
+.contact-content h3 {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.contact-content p {
+    margin: 0 0 var(--spacing-lg) 0;
+    color: var(--text-secondary);
+}
+
+.support-hours {
+    background: var(--bg-glass);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.hours-info h4 {
+    margin: 0 0 var(--spacing-lg) 0;
+    color: var(--text-primary);
+    font-size: 1.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.hours-grid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.hours-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hours-item:last-child {
+    border-bottom: none;
+}
+
+.day {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.time {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Article Modal */
+.article-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-overlay);
+    backdrop-filter: blur(10px);
+}
+
+.modal-container {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    max-width: 90%;
+    max-height: 90%;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-glass);
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modal-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--error-color);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.close-btn:hover {
+    transform: scale(1.1);
+}
+
+.modal-content {
+    flex: 1;
+    padding: var(--spacing-xl);
+    overflow-y: auto;
+    line-height: 1.8;
+    color: var(--text-primary);
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-lg);
+}
+
+.modal-content h3 {
+    color: var(--text-primary);
+    margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+}
+
+.modal-content p {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-secondary);
+}
+
+.modal-content ul {
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-lg);
+}
+
+.modal-content li {
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tutorials-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+    }
+    
+    .search-wrapper {
+        flex-direction: column;
+        padding: var(--spacing-md);
+    }
+    
+    .search-wrapper input {
+        width: 100%;
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-container {
+        width: 95%;
+        height: 90%;
+    }
+    
+    .modal-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .modal-actions {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+let helpState = {
+    searchResults: [],
+    currentArticle: null,
+    searchTimeout: null
+};
+
+// Sample help data
+const helpData = {
+    articles: {
+        'how-to-begin': {
+            title: 'How to Begin Your Visa Application',
+            content: `
+                <h2>Getting Started with Your Visa Application</h2>
+                <p>Starting your visa application can seem overwhelming, but with the right guidance, it becomes a straightforward process. Here's everything you need to know to begin your journey.</p>
+                
+                <h3>Step 1: Determine Your Visa Type</h3>
+                <p>The first step is identifying the correct visa type for your travel purpose:</p>
+                <ul>
+                    <li><strong>Tourist/Visitor Visa:</strong> For leisure travel, visiting friends and family</li>
+                    <li><strong>Business Visa:</strong> For business meetings, conferences, negotiations</li>
+                    <li><strong>Student Visa:</strong> For academic studies and educational programs</li>
+                    <li><strong>Work Visa:</strong> For employment and professional opportunities</li>
+                    <li><strong>Transit Visa:</strong> For passing through a country to reach your final destination</li>
+                </ul>
+                
+                <h3>Step 2: Check Visa Requirements</h3>
+                <p>Each country has specific requirements based on your nationality and visa type. Common requirements include:</p>
+                <ul>
+                    <li>Valid passport with at least 6 months validity</li>
+                    <li>Completed visa application form</li>
+                    <li>Recent passport-sized photographs</li>
+                    <li>Proof of financial means</li>
+                    <li>Travel itinerary or invitation letter</li>
+                    <li>Supporting documents specific to visa type</li>
+                </ul>
+                
+                <h3>Step 3: Gather Required Documents</h3>
+                <p>Start collecting documents early as some may take time to obtain. Ensure all documents are current, properly formatted, and translated if necessary.</p>
+                
+                <h3>Step 4: Complete the Application</h3>
+                <p>Use our guided application system to ensure accuracy and completeness. Double-check all information before submission.</p>
+            `
+        },
+        'document-requirements': {
+            title: 'Understanding Document Requirements',
+            content: `
+                <h2>Visa Document Requirements Guide</h2>
+                <p>Understanding what documents you need is crucial for a successful visa application. This comprehensive guide covers all major document categories.</p>
+                
+                <h3>Essential Documents for All Applications</h3>
+                <ul>
+                    <li><strong>Passport:</strong> Must be valid for at least 6 months beyond travel date</li>
+                    <li><strong>Application Form:</strong> Completed accurately and signed</li>
+                    <li><strong>Photographs:</strong> Recent passport-sized photos meeting specific requirements</li>
+                    <li><strong>Fee Payment:</strong> Visa processing fee receipt</li>
+                </ul>
+                
+                <h3>Financial Documents</h3>
+                <p>Proof of financial stability is required for most visa types:</p>
+                <ul>
+                    <li>Bank statements (last 3-6 months)</li>
+                    <li>Employment letter with salary details</li>
+                    <li>Tax returns or income tax documents</li>
+                    <li>Sponsorship letter if applicable</li>
+                </ul>
+                
+                <h3>Travel-Related Documents</h3>
+                <ul>
+                    <li>Flight reservations or itinerary</li>
+                    <li>Hotel bookings or accommodation proof</li>
+                    <li>Travel insurance (required for many countries)</li>
+                    <li>Invitation letters from hosts</li>
+                </ul>
+                
+                <h3>Document Quality Requirements</h3>
+                <p>All documents must be:</p>
+                <ul>
+                    <li>Original or certified copies</li>
+                    <li>Clear and legible</li>
+                    <li>Translated into the required language</li>
+                    <li>Properly notarized if required</li>
+                </ul>
+            `
+        }
+        // Add more articles as needed
+    },
+    
+    suggestions: [
+        'How long does visa processing take?',
+        'What documents do I need for a tourist visa?',
+        'Can I apply for multiple visas?',
+        'Visa requirements for USA',
+        'Student visa application process',
+        'Business visa documents',
+        'Transit visa requirements',
+        'Visa interview preparation',
+        'Document translation requirements',
+        'Financial proof for visa'
+    ]
+};
+
+// Initialize help system
+document.addEventListener('DOMContentLoaded', function() {
+    // Focus on search input for better UX
+    setTimeout(() => {
+        const searchInput = document.getElementById('helpSearch');
+        if (searchInput) {
+            searchInput.focus();
+        }
+    }, 500);
+});
+
+function searchHelp(event) {
+    const query = event.target.value.toLowerCase().trim();
+    
+    // Clear previous timeout
+    if (helpState.searchTimeout) {
+        clearTimeout(helpState.searchTimeout);
+    }
+    
+    // Show suggestions on input
+    if (query.length > 0) {
+        helpState.searchTimeout = setTimeout(() => {
+            showSearchSuggestions(query);
+        }, 300);
+    } else {
+        hideSearchSuggestions();
+    }
+    
+    // Search on Enter
+    if (event.key === 'Enter') {
+        performSearch();
+    }
+}
+
+function showSearchSuggestions(query) {
+    const suggestionsContainer = document.getElementById('searchSuggestions');
+    const matchingSuggestions = helpData.suggestions.filter(suggestion =>
+        suggestion.toLowerCase().includes(query)
+    ).slice(0, 5);
+    
+    if (matchingSuggestions.length > 0) {
+        suggestionsContainer.innerHTML = matchingSuggestions.map(suggestion => `
+            <div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">
+                ${suggestion}
+            </div>
+        `).join('');
+        suggestionsContainer.style.display = 'block';
+    } else {
+        hideSearchSuggestions();
+    }
+}
+
+function hideSearchSuggestions() {
+    const suggestionsContainer = document.getElementById('searchSuggestions');
+    suggestionsContainer.style.display = 'none';
+}
+
+function selectSuggestion(suggestion) {
+    document.getElementById('helpSearch').value = suggestion;
+    hideSearchSuggestions();
+    performSearch();
+}
+
+function performSearch() {
+    const query = document.getElementById('helpSearch').value.trim();
+    if (query) {
+        // Simulate search results
+        showToast(`Searching for: "${query}"`, 'info');
+        
+        // In a real implementation, this would search the knowledge base
+        // For now, show relevant categories
+        highlightRelevantCategories(query);
+        
+        hideSearchSuggestions();
+    }
+}
+
+function highlightRelevantCategories(query) {
+    // Remove existing highlights
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('highlighted');
+    });
+    
+    // Add highlights based on query
+    const lowercaseQuery = query.toLowerCase();
+    const categoryMappings = {
+        'document': 'documents',
+        'passport': 'documents',
+        'visa type': 'visa-types',
+        'tourist': 'visa-types',
+        'business': 'visa-types',
+        'application': 'application-process',
+        'process': 'application-process',
+        'getting started': 'getting-started',
+        'begin': 'getting-started',
+        'problem': 'troubleshooting',
+        'error': 'troubleshooting',
+        'country': 'country-specific',
+        'usa': 'country-specific',
+        'uk': 'country-specific'
+    };
+    
+    Object.entries(categoryMappings).forEach(([keyword, category]) => {
+        if (lowercaseQuery.includes(keyword)) {
+            const categoryElement = document.querySelector(`[data-category="${category}"]`);
+            if (categoryElement) {
+                categoryElement.classList.add('highlighted');
+                // Scroll to category
+                categoryElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+}
+
+function showArticle(articleId) {
+    const article = helpData.articles[articleId];
+    if (!article) {
+        showToast('Article not found', 'error');
+        return;
+    }
+    
+    helpState.currentArticle = article;
+    
+    const modal = document.getElementById('articleModal');
+    const title = document.getElementById('articleTitle');
+    const content = document.getElementById('articleContent');
+    
+    title.textContent = article.title;
+    content.innerHTML = article.content;
+    
+    modal.style.display = 'flex';
+    
+    // Animate in
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modal.querySelector('.modal-container').style.transform = 'scale(1)';
+    }, 10);
+}
+
+function closeArticleModal() {
+    const modal = document.getElementById('articleModal');
+    modal.style.opacity = '0';
+    modal.querySelector('.modal-container').style.transform = 'scale(0.9)';
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+}
+
+function printArticle() {
+    if (helpState.currentArticle) {
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${helpState.currentArticle.title}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+                    h1 { color: #333; }
+                    h2 { color: #666; margin-top: 30px; }
+                    h3 { color: #888; margin-top: 25px; }
+                    ul { padding-left: 20px; }
+                    li { margin-bottom: 5px; }
+                </style>
+            </head>
+            <body>
+                <h1>${helpState.currentArticle.title}</h1>
+                ${helpState.currentArticle.content}
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+}
+
+function toggleFAQ(element) {
+    element.classList.toggle('active');
+}
+
+function playTutorial(tutorialId) {
+    showToast(`Playing tutorial: ${tutorialId}`, 'info');
+    // In a real implementation, this would open a video player
+}
+
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function openEmailSupport() {
+    window.location.href = 'mailto:support@visaassistant.com?subject=Support Request';
+}
+
+function showPhoneNumbers() {
+    showToast('Phone Support: +1-800-VISA-HELP', 'info');
+}
+
+// Add highlighting styles
+document.addEventListener('DOMContentLoaded', function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .category-item.highlighted {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+            transform: scale(1.02);
+        }
+    `;
+    document.head.appendChild(style);
+});
+
+// Close suggestions when clicking outside
+document.addEventListener('click', function(event) {
+    const searchContainer = document.querySelector('.help-search');
+    if (searchContainer && !searchContainer.contains(event.target)) {
+        hideSearchSuggestions();
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+# Original requirements
+gradio
+google-generativeai
+sentence-transformers
+faiss-cpu
+tqdm
+numpy
+pandas
+python-dotenv
+PyPDF2
+python-docx
+Pillow
+Flask
+werkzeug
+
+# Enhanced document verification requirements
+opencv-python>=4.5.0
+exifread>=2.3.2
+python-dateutil>=2.8.2
+scikit-learn>=1.0.0
+cryptography>=3.4.8

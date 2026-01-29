@@ -1,0 +1,559 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Visa Assistant Pro{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Welcome Section -->
+    <section class="welcome-section" data-animation="fadeInUp">
+        <div class="welcome-card card">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <h1 class="welcome-title">Welcome to Visa Assistant Pro</h1>
+                    <p class="welcome-subtitle">Your AI-powered companion for visa applications and immigration guidance</p>
+                    <div class="welcome-actions">
+                        <a href="{{ url_for('application') }}" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i>
+                            Start Application
+                        </a>
+                        <a href="{{ url_for('chat') }}" class="btn btn-secondary">
+                            <i class="fas fa-robot"></i>
+                            Ask AI Assistant
+                        </a>
+                    </div>
+                </div>
+                <div class="welcome-visual">
+                    <div class="floating-icon">
+                        <i class="fas fa-passport"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Cards -->
+    <section class="stats-section" data-animation="fadeInUp">
+        <div class="stats-grid">
+            <div class="stat-card card" data-animation="bounceIn">
+                <div class="stat-icon success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">98.5%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+            
+            <div class="stat-card card" data-animation="bounceIn">
+                <div class="stat-icon info">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">25,000+</div>
+                    <div class="stat-label">Happy Clients</div>
+                </div>
+            </div>
+            
+            <div class="stat-card card" data-animation="bounceIn">
+                <div class="stat-icon warning">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">150+</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+            </div>
+            
+            <div class="stat-card card" data-animation="bounceIn">
+                <div class="stat-icon primary">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">AI Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions-section" data-animation="fadeInLeft">
+        <div class="section-header">
+            <h2 class="section-title">Quick Actions</h2>
+            <p class="section-subtitle">Get started with your visa journey</p>
+        </div>
+        
+        <div class="actions-grid">
+            <a href="{{ url_for('application') }}" class="action-card card">
+                <div class="action-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="action-content">
+                    <h3>New Application</h3>
+                    <p>Start your visa application process with our AI-guided form</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('chat') }}" class="action-card card">
+                <div class="action-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="action-content">
+                    <h3>AI Consultation</h3>
+                    <p>Chat with our AI assistant for personalized visa guidance</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('documents') }}" class="action-card card">
+                <div class="action-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Document Analysis</h3>
+                    <p>Upload and analyze your documents with AI verification</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('help_page') }}" class="action-card card">
+                <div class="action-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="action-content">
+                    <h3>Help Center</h3>
+                    <p>Browse FAQ and get answers to common visa questions</p>
+                </div>
+                <div class="action-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="recent-activity-section" data-animation="fadeInRight">
+        <div class="section-header">
+            <h2 class="section-title">Recent Activity</h2>
+            <p class="section-subtitle">Your latest interactions and updates</p>
+        </div>
+        
+        <div class="activity-timeline card">
+            <div class="timeline-item">
+                <div class="timeline-marker success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Application Started</div>
+                    <div class="timeline-desc">Tourist visa application for Australia initiated</div>
+                    <div class="timeline-time">2 hours ago</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker info">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">AI Consultation</div>
+                    <div class="timeline-desc">Received guidance on document requirements</div>
+                    <div class="timeline-time">1 day ago</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker warning">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Document Uploaded</div>
+                    <div class="timeline-desc">Passport scan analyzed successfully</div>
+                    <div class="timeline-time">3 days ago</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Showcase -->
+    <section class="features-section" data-animation="fadeInUp">
+        <div class="section-header">
+            <h2 class="section-title">Why Choose Visa Assistant Pro?</h2>
+            <p class="section-subtitle">Advanced AI technology meets expert visa knowledge</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card card" data-animation="zoomIn">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI-Powered Analysis</h3>
+                <p>Advanced machine learning algorithms analyze your profile and provide personalized recommendations</p>
+            </div>
+            
+            <div class="feature-card card" data-animation="zoomIn">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure & Private</h3>
+                <p>Your personal information is encrypted and protected with industry-standard security measures</p>
+            </div>
+            
+            <div class="feature-card card" data-animation="zoomIn">
+                <div class="feature-icon">
+                    <i class="fas fa-lightning-bolt"></i>
+                </div>
+                <h3>Instant Feedback</h3>
+                <p>Get immediate analysis of your visa approval chances and actionable improvement suggestions</p>
+            </div>
+            
+            <div class="feature-card card" data-animation="zoomIn">
+                <div class="feature-icon">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <h3>Global Coverage</h3>
+                <p>Supporting visa applications for 150+ countries with up-to-date requirements and regulations</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+/* Dashboard-specific styles */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.welcome-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.welcome-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: var(--spacing-2xl);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: float 20s ease-in-out infinite;
+}
+
+.welcome-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-2xl);
+}
+
+.welcome-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+}
+
+.welcome-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: var(--spacing-xl);
+}
+
+.welcome-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.welcome-visual {
+    flex-shrink: 0;
+}
+
+.floating-icon {
+    font-size: 8rem;
+    opacity: 0.2;
+    animation: float 6s ease-in-out infinite;
+}
+
+.stats-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    transition: all var(--transition-normal);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-icon.success { background: linear-gradient(45deg, var(--success-color), #22c55e); color: white; }
+.stat-icon.info { background: linear-gradient(45deg, var(--info-color), #3b82f6); color: white; }
+.stat-icon.warning { background: linear-gradient(45deg, var(--warning-color), #f59e0b); color: white; }
+.stat-icon.primary { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; }
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+    transition: left var(--transition-normal);
+}
+
+.action-card:hover::before {
+    left: 100%;
+}
+
+.action-card:hover {
+    transform: translateX(10px);
+}
+
+.action-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.action-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
+}
+
+.action-content p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.action-arrow {
+    margin-left: auto;
+    opacity: 0.5;
+    transition: all var(--transition-fast);
+}
+
+.action-card:hover .action-arrow {
+    opacity: 1;
+    transform: translateX(5px);
+}
+
+.activity-timeline {
+    padding: var(--spacing-xl);
+}
+
+.timeline-item {
+    display: flex;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) 0;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    margin-left: 15px;
+    padding-left: var(--spacing-xl);
+    position: relative;
+}
+
+.timeline-item:last-child {
+    border-left: none;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -16px;
+    top: var(--spacing-lg);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    color: white;
+}
+
+.timeline-marker.success { background: var(--success-color); }
+.timeline-marker.info { background: var(--info-color); }
+.timeline-marker.warning { background: var(--warning-color); }
+
+.timeline-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.timeline-desc {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.timeline-time {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.feature-card {
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--spacing-lg);
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+}
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .welcome-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .welcome-actions {
+        justify-content: center;
+    }
+    
+    .floating-icon {
+        font-size: 4rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
